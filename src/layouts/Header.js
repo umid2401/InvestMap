@@ -141,6 +141,7 @@ const Header = () => {
   // sendNumberSms
   const sendEmail = () => {
     setVerify(true);
+    setForgotModal(false);
     
   };
   //Forgotni funksiyalari va statelari
@@ -472,7 +473,7 @@ const Header = () => {
               <Link
                 to={"#"}
                 className="btn-link collapsed"
-                onClick={() => (setForgot(true), setloginModal(false))}
+                onClick={() => (setForgotModal(true), setloginModal(false))}
               >
                 Forgot password?
               </Link>
@@ -544,7 +545,7 @@ const Header = () => {
               to={"#"}
               className="sign-text d-block"
               data-bs-toggle="collapse"
-              onClick={() => (setForgot(false), setloginModal(true))}
+              onClick={() => (setForgotModal(false), setUpdatePasswordModal(true))}
             >
               Back
             </Link>
