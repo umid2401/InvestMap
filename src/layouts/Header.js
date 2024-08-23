@@ -20,11 +20,9 @@ const Header = () => {
   const nav = useNavigate();
   //Modal
   const [loginModal, setloginModal] = useState(false);
-  const [resetModal, setResetModal] = useState(false);
+  const [forgotModal, setForgotModal] = useState(false);
   const [signupModal, setSignupModal] = useState(false);
   const [updatePasswordModal, setUpdatePasswordModal] = useState(false);
-  const [roleModal, setRoleModal] = useState(false);
-  const [mainModal, setMainModal] = useState(false);
   const [verify, setVerify] = useState(false);
   //Modals end
   //API FOR INVESTMAP
@@ -43,8 +41,13 @@ const Header = () => {
     contact_method: "",
   };
   const signInstate = { identifier: "", password: "" };
+  const forgotPasswordState ={password1:"", password2:""}
+  const sendIdentifier = {identifier:""}
   const [sign_up, setSign_up] = useState(signUpState);
   const [sign_in, setSign_in] = useState(signInstate);
+  const [forgot, setForgot] =useState(forgotPasswordState);
+  const [identifier,setIdentifier] = useState(sendIdentifier);
+
   //funksiya handel qilish
   const handelSignUp = (e) => {
     const { name, value } = e.target;
@@ -54,13 +57,13 @@ const Header = () => {
     const { name, value } = e.target;
     setSign_in({ ...sign_in, [name]: value });
   };
+  const handelForgot =(e)=>{
+    const { name, value } = e.target;
+    setForgot({ ...sign_in, [name]: value });
+  }
 
-  //selectRole
-  const selectRole = () => {
-    setRoleModal(false);
-    setMainModal(true);
-  };
 
+ 
   //Formsubmit
   const formSubmit = (e, customAction) => {
     e.preventDefault();
@@ -136,11 +139,15 @@ const Header = () => {
     }
   };
   // sendNumberSms
-  const sendNumber = () => {
+  const sendEmail = () => {
     setVerify(true);
-    setResetModal(false);
+    
   };
+  //Forgotni funksiyalari va statelari
+
+
   const changePassword = () => {
+    axios.post(`${api_url}/`)
     nav("/");
     setUpdatePasswordModal(false);
   };
@@ -465,7 +472,7 @@ const Header = () => {
               <Link
                 to={"#"}
                 className="btn-link collapsed"
-                onClick={() => (setResetModal(true), setloginModal(false))}
+                onClick={() => (setForgot(true), setloginModal(false))}
               >
                 Forgot password?
               </Link>
@@ -501,13 +508,13 @@ const Header = () => {
       {/* Reset Modal */}
       <Modal
         className="modal fade modal-wrapper auth-modal"
-        show={resetModal}
-        onHide={setResetModal}
+        show={forgotModal}
+        onHide={setForgotModal}
         centered
       >
         <div className="reset-password" id="reset-password">
-          <h2 className="title">Reset password?</h2>
-          <form onSubmit={(e) => formSubmit(e, sendNumber)}>
+          <h2 className="title">Forgot Password</h2>
+          <form onSubmit={(e) => formSubmit(e, sendEmail)}>
             <div className="form-group password-icon-bx">
               <i className="fa fa-lock"></i>
               <p>
@@ -517,9 +524,12 @@ const Header = () => {
             </div>
             <div className="form-group">
               <input
-                type="number"
+                type="email"
                 className="form-control"
                 placeholder="+99890234567"
+                name="idenfiter"
+                value={identifier?.identifier}
+                onChange={(e)=>setIdentifier(e?.target?.value)}
               />
             </div>
             <div className="form-group">
@@ -534,7 +544,7 @@ const Header = () => {
               to={"#"}
               className="sign-text d-block"
               data-bs-toggle="collapse"
-              onClick={() => (setResetModal(false), setloginModal(true))}
+              onClick={() => (setForgot(false), setloginModal(true))}
             >
               Back
             </Link>
@@ -820,7 +830,7 @@ const Header = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-      {/* Passwordni yangilash uchun  */}
+      {/* Forgot Passwordni yangilash uchun  */}
       <Modal
         className="fade modal-wrapper auth-modal"
         show={updatePasswordModal}
@@ -837,7 +847,10 @@ const Header = () => {
             <input
               type="password"
               className="form-control"
-              placeholder="Enter email address"
+              placeholder="New password"
+              name="password1"
+              value={forgot?.password1}
+              onChange={handelForgot}
             />
           </div>
           <div className="form-group">
@@ -848,6 +861,9 @@ const Header = () => {
               type="password"
               className="form-control"
               placeholder="Confirm password"
+              name="password2"
+              value={forgot?.password2}
+              onChange={handelForgot}
             />
           </div>
 
@@ -858,219 +874,11 @@ const Header = () => {
           </div>
         </form>
       </Modal>
-      {/* Role ni tanlash uchun Modal */}
-      {/* <Modal
-        className="fade modal-wrapper auth-modal"
-        show={roleModal}
-        onHide={() => setRoleModal(false)}
-        centered
-      >
-        <h2 className="title">Select Role</h2>
+      
+      
+     
 
-        <form onSubmit={(e) => formSubmit(e, selectRole)}>
-          <div className="mb-3">
-            <label className="form-label">Select Role</label>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="options"
-                id="option1"
-                value="option1"
-              />
-              <label className="form-check-label" htmlFor="option1">
-                Main
-              </label>
-            </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="options"
-                id="option2"
-                value="option2"
-              />
-              <label className="form-check-label" htmlFor="option2">
-                Bank details
-              </label>
-            </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="options"
-                id="option3"
-                value="option3"
-              />
-              <label className="form-check-label" htmlFor="option3">
-                Contact Informations
-              </label>
-            </div>
-          </div>
-
-          <button
-          
-            type="submit"
-            className="btn btn-primary py-2 "
-          >
-            Submit
-          </button>
-        </form>
-      </Modal> */}
-      {/* Role tanlangandan keyin chiquvchi modallar masalan */}
-      {/* Main Modal */}
-
-      <Modal
-        className="fade modal-wrapper auth-modal"
-        show={mainModal}
-        onHide={() => setMainModal(false)}
-        centered
-      >
-        <h2 className="title">Company Information Form</h2>
-        <form>
-          {/* Logo */}
-          <div className="mb-3">
-            <label htmlFor="logo" className="form-label">
-              Logo URL
-            </label>
-            <input
-              type="file"
-              className="form-control"
-              id="logo"
-              placeholder="Enter logo URL"
-            />
-          </div>
-
-          {/* Legal Name */}
-          <div className="mb-3">
-            <label htmlFor="legalName" className="form-label">
-              Legal Name
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="legalName"
-              placeholder="Enter legal name"
-            />
-          </div>
-
-          {/* TIN */}
-          <div className="mb-3">
-            <label htmlFor="tin" className="form-label">
-              TIN
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="tin"
-              placeholder="Enter TIN"
-            />
-          </div>
-
-          {/* Date of Registration */}
-          <div className="mb-3">
-            <label htmlFor="registrationDate" className="form-label">
-              Date of Registration
-            </label>
-            <input type="date" className="form-control" id="registrationDate" />
-          </div>
-
-          {/* National Classifier of Activities */}
-          <div className="mb-3">
-            <label htmlFor="nationalClassifier" className="form-label">
-              National Classifier of Activities
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="nationalClassifier"
-              placeholder="Enter National Classifier"
-            />
-          </div>
-
-          {/* Legal Address */}
-          <div className="mb-3">
-            <label htmlFor="legalAddress" className="form-label">
-              Legal Address
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="legalAddress"
-              placeholder="Enter legal address"
-            />
-          </div>
-
-          {/* Name of Director */}
-          <div className="mb-3">
-            <label htmlFor="directorName" className="form-label">
-              Name of Director
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="directorName"
-              placeholder="Enter director's name"
-            />
-          </div>
-
-          {/* Director TIN */}
-          <div className="mb-3">
-            <label htmlFor="directorTIN" className="form-label">
-              Director TIN
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="directorTIN"
-              placeholder="Enter director's TIN"
-            />
-          </div>
-
-          {/* Share Capital */}
-          <div className="mb-3">
-            <label htmlFor="shareCapital" className="form-label">
-              Share Capital
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="shareCapital"
-              placeholder="Enter share capital"
-            />
-          </div>
-
-          {/* State of Activity */}
-          <div className="mb-3">
-            <label htmlFor="stateOfActivity" className="form-label">
-              State of Activity
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="stateOfActivity"
-              placeholder="Enter state of activity"
-            />
-          </div>
-
-          {/* Number of Employees */}
-          <div className="mb-3">
-            <label htmlFor="numberOfEmployees" className="form-label">
-              Number of Employees
-            </label>
-            <input
-              type="number"
-              className="form-control"
-              id="numberOfEmployees"
-              placeholder="Enter number of employees"
-            />
-          </div>
-
-          <button type="submit" className="btn btn-primary">
-            Submit
-          </button>
-        </form>
-      </Modal>
+     
     </>
   );
 };
