@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button, Form, Modal } from "react-bootstrap";
 import Collapse from "react-bootstrap/Collapse";
 import { MenuListArray2 } from "./Menu";
-import { SignUp } from "../api/Api";
+
 //Logo for Invest
 import logo from "./../assets/images/logo.png";
 import newlogo from "./../assets/images/new_logo.png";
