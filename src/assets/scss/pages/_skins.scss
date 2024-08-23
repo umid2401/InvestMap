@@ -1,0 +1,103 @@
+[data-primary="color-skin-1"]{
+// .color-skin-1{
+	
+	--primary: #1B8271;
+	--secondary: #FF7468;
+	--secondary-hover: #f64f40;
+	--primary-hover: #186f61;
+	--primary-dark: #ea4619;
+	--rgba-primary-1: rgba(27,130,113,0.1);
+	--rgba-primary-2: rgba(27,130,113,0.2);
+	--rgba-primary-3: rgba(27,130,113,0.3);
+	--rgba-primary-4: rgba(27,130,113,0.4);
+	--rgba-primary-5: rgba(27,130,113,0.5);
+	--rgba-primary-6: rgba(27,130,113,0.6);
+	--rgba-primary-7: rgba(27,130,113,0.7);
+	--rgba-primary-8: rgba(27,130,113,0.8);
+	--rgba-primary-9: rgba(27,130,113,0.9);
+	--title: #071c35;
+	
+}
+
+
+
+[data-primary="color-skin-2"]{
+// .color-skin-2{
+	--primary: #D54400;
+	--secondary: #F7CF47;
+	--secondary-hover: #e2be3d;
+	--primary-hover: #c03d00;
+	--primary-dark: #9d3200;
+	--rgba-primary-1: rgba(213,68,0,0.1);
+	--rgba-primary-2: rgba(213,68,0,0.2);
+	--rgba-primary-3: rgba(213,68,0,0.3);
+	--rgba-primary-4: rgba(213,68,0,0.4);
+	--rgba-primary-5: rgba(213,68,0,0.5);
+	--rgba-primary-6: rgba(213,68,0,0.6);
+	--rgba-primary-7: rgba(213,68,0,0.7);
+	--rgba-primary-8: rgba(213,68,0,0.8);
+	--rgba-primary-9: rgba(213,68,0,0.9);
+	--title: #003B4A;	
+	
+	.btn-secondary{
+		color: var(--title);
+	}
+	.btn-secondary:hover{
+		color: var(--title);
+		border-color: var(--secondary-hover);
+	}
+	.bg-gray{
+		background-color: rgba(0,59,74,0.1);
+	}
+}
+
+
+
+[data-primary="color-skin-3"]{
+// .color-skin-3{
+	--primary: #01BFBD;
+	--secondary: #F2F2F2;
+	--primary-hover: #00a2a1;
+	--primary-dark: #008584;
+	--dark: #141818;
+	--rgba-primary-1: rgba(1,191,189,0.1);
+	--rgba-primary-2: rgba(1,191,189,0.2);
+	--rgba-primary-3: rgba(1,191,189,0.3);
+	--rgba-primary-4: rgba(1,191,189,0.4);
+	--rgba-primary-5: rgba(1,191,189,0.5);
+	--rgba-primary-6: rgba(1,191,189,0.6);
+	--rgba-primary-7: rgba(1,191,189,0.7);
+	--rgba-primary-8: rgba(1,191,189,0.8);
+	--rgba-primary-9: rgba(1,191,189,0.9);
+	--title: #141818;	
+
+	.breadcrumb-row{
+		ul {
+			background: #faf8f2;
+			li {
+				a {
+					color: #050d36;
+				}
+			}
+			.breadcrumb-item {
+				
+				&.active {
+					color: var(--primary);
+				}
+			}
+		}
+	}
+	.dz-card.style-1 .dz-media .dz-badge {
+		color: #050d36;
+	}
+	.progress-bx.style-1 .progress .progress-bar.progress-bar-secondary {
+		background-color: #1B8271;
+	}
+	.testimonial-1,
+	.icon-bx-wraper.style-1:before,
+	.form-wizard .nav-wizard .nav-link.active, 
+	.form-wizard.dz-form-step .nav-wizard .nav-link.completed,
+	.dz-team.style-1 .team-social li a{
+		background-color : #FF7468;
+	}
+}

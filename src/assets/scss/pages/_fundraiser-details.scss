@@ -1,0 +1,153 @@
+// Fundraiser Single
+.fundraiser-single{
+	margin-bottom: 50px;
+	
+	.fundraiser-bottom{
+		border-top: 1px solid rgba(0,0,0,0.1);
+		padding-top: 20px;
+		margin-top: 30px;
+		
+		li{
+			display: inline-block;
+			margin-right: 10px;
+			margin-bottom: 10px;
+		}
+	}
+}
+.fundraiser-gallery-wrapper{
+	margin-bottom: 30px;
+	
+	.dz-media{
+		overflow: hidden;
+		border-radius: var(--border-radius-base);
+	}
+	.fundraiser-gallery-thumb{
+	    margin-top: 10px;
+		.dz-media{
+			cursor: pointer;
+		}
+		
+		.swiper-slide.swiper-slide-thumb-active{
+			.dz-media{
+				opacity: 0.5;
+			}
+		}
+	}
+	
+	// .btn-wrapper{
+		.swiper-button-prev,
+		.swiper-button-next{
+			position: absolute;
+			top: 50%;
+			z-index: 1;
+			@include transitionMedium;
+			background-color: rgba(0,0,0,0.3);
+			font-size: 20px;
+			display: block;
+			border-radius: var(--border-radius-base);
+			height: 50px;
+			width: 50px;
+			line-height: 50px;
+			color: #fff;
+			margin: 0 20px;
+			text-align: center;
+			transform: translateY(-50%);
+	
+			&:hover{
+				background-color: var(--primary);
+			}
+			&::after{
+				font-size: 1.125rem;
+				font-weight: 900;
+			}
+		}
+		.swiper-button-next{
+			right: 0;
+			left: auto;
+		} 
+		.swiper-button-prev{
+			left: 0;
+			right: auto;
+		}
+		
+	// }
+}
+.select-drop{
+	.select-drop-btn{
+		padding: 12px 20px;
+		background-color: #fff;
+		border: 1px solid #e1e1e1 !important;
+		border-radius: var(--border-radius-base);
+		justify-content: space-between;
+		align-items: center;
+		display: flex;
+		i{
+			font-weight: 600;			
+			color: var(--primary);	
+		}
+		&.style-2 {
+			background-color: var(--rgba--primary-1);
+			font-size: 14px;
+		}
+	}
+	.dropdown-menu {
+		.dropdown-item {
+			&:hover{
+				background-color: var(--primary);
+				color: $white;
+			}
+		}
+	}
+}
+.form-wizard{
+	&.dz-form-step{
+		.nav-wizard{
+			padding: 0;
+			&>div{
+				padding-left: 0;
+				padding-right: 0;
+				[class^="ConnectorContainer"]{
+					display: none;
+				}
+				.StepMain-0-2-3{
+					.StepButtonContent-0-2-5{
+						font-size: 1.125rem;
+					}					
+				}
+				&:last-child{
+					.nav-link{
+						border-right: 0 !important;
+					}
+				}
+			}
+			.nav-link{
+				width: 100%;
+				border-radius: 0;
+				padding: 30px 0;
+				border-right: 1px solid rgba(0, 0, 0, 0.1) !important;
+				border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+				.StepButtonContent-0-2-5{
+					color: var(--primary);
+				}
+				&.completed{
+					background-color: var(--secondary);
+					border-right: 1px solid rgba(255, 255, 255, 0.2) !important;
+					.StepButtonContent-0-2-5{
+						color: #fff;
+					}	
+				}
+				&.active{
+					border-right: 1px solid rgba(255, 255, 255, 0.2) !important;
+					.StepButtonContent-0-2-5{
+						color: #fff;
+					}
+				}
+			}
+		}
+		.toolbar{
+			.btn{
+				color: #fff;
+			}
+		}
+	}
+}
