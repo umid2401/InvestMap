@@ -71,7 +71,7 @@ const Header = () => {
   };
   //login bo'lganda ishlaydigan funksiya
   const login = () => {
-    axios.post(`${api_url}/user/login`, sign_in).then((res) => {
+    axios.post(`${api_url}/user/login/`, sign_in).then((res) => {
       if (res.ok) {
         setloginModal(false);
         setSign_in(signInstate);
@@ -89,9 +89,31 @@ const Header = () => {
     
   };
   //sign up bo'lganda ishlaydigan  funksiya
+  // const signUp = () => {
+  //   fetch("http://api.investmap.uz/user/register/", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: sign_up,
+  //   })
+  //     .then((response) => response.json()) // Javobni JSON formatida olish
+  //     .then((res) => {
+  //       if (res.ok) { // Agar javob muvaffaqiyatli bo'lsa
+  //         localStorage.setItem("invest_token", res?.token);
+  //         setSignupModal(false); // Signup modalni yopish
+  //         setVerify(true); // Verifikatsiya modalini ko'rsatish
+  //         setSign_up(signUpState); // Formani tozalash
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       alert(err); // Xatolikni ko'rsatish
+  //     });
+  // };
+  
   const signUp = () => {
     axios
-      .post(`${api_url}/user/register`, sign_up)
+      .post("http://api.investmap.uz/user/register", sign_up)
       .then((res) => {
         if (res.ok) {
           localStorage.setItem("invest_token", res?.token);
@@ -101,7 +123,7 @@ const Header = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+       console.log(err.response)
       });
   };
   // Verify bo'lganda ishlaydigan funksiya
