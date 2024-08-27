@@ -1,4 +1,7 @@
+import { useState } from "react";
+
 const FirstStep = () => {
+  const [state, setState] =useState()
   return (
     <>
       <div id="wizard_Time" className="tab-pane row" role="tabpanel">

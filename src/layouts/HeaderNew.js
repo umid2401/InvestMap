@@ -14,7 +14,10 @@ import { toast } from "react-toastify";
 const HeaderNew = () => {
   //for otp code
   const [otp, setOtp] = useState(Array(6).fill(""));
-  const [verification_token, setVerification_token] = useState("")
+  const [verification_token, setVerification_token] = useState("");
+  const [reset_token, setReset_token] = useState("")
+//   const invest_token = localStorage.getItem("invest_token")
+const invest_token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI0ODQxNTg5LCJpYXQiOjE3MjQ3NTUxODksImp0aSI6IjBhODRjM2VlNWYxODQzNzM5YmRjOGExYzhkOTMwYjM4IiwidXNlcl9pZCI6MX0.uwPuSUjr5wObN7eqrzl22-_CVoqorecJcBUO8FRpKIs"
   const [role, setRole]=useState("");
   //invest_token
   //react hooks
@@ -46,7 +49,7 @@ const HeaderNew = () => {
     contact_method: "",
   };
   const signInstate = { identifier: "", password: "" };
-  const forgotPasswordState = { password1: "", password2: "" };
+  const forgotPasswordState = { new_password: "", confirm_password: "" };
   const sendIdentifier = { identifier: "" };
   const [sign_up, setSign_up] = useState(signUpState);
   const [sign_in, setSign_in] = useState(signInstate);
@@ -63,8 +66,13 @@ const HeaderNew = () => {
   };
   const handelForgot = (e) => {
     const { name, value } = e.target;
-    setForgot({ ...sign_in, [name]: value });
+    setForgot({ ...forgot, [name]: value });
   };
+  const handelId = (e) => {
+    const { name, value } = e.target;
+    setIdentifier({ ...identifier, [name]: value });
+  };
+  
   //Formsubmit
   const formSubmit = (e, customAction) => {
     e.preventDefault();
@@ -82,6 +90,7 @@ const HeaderNew = () => {
               setVerify(true);
               setRole(sign_up?.role)
               setSign_up(signUpState);
+              setVerifyType("signup")
               toast.success(`${res?.data?.message}`, {
                 position: "top-center",
                 autoClose: 5000,
@@ -95,8 +104,9 @@ const HeaderNew = () => {
           } 
       })
       .catch((err) => {
-        toast.warning("error", {
-            position: "top-center",
+        console.log(err)
+        toast.warning(`${err?.response?.data?.error}`, {
+            position: "top-left",
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -113,7 +123,7 @@ const HeaderNew = () => {
       .post(`${api_url}/user/login/`, sign_in)
       .then((res) => {
         if (res.status===200) {
-            console.log(res);
+         console.log(res);
           setloginModal(false);
           console.log(sign_up)
           setSign_in(signInstate);
@@ -133,12 +143,10 @@ const HeaderNew = () => {
           else{
             nav("/company");
           }
-         
         }
       })
       .catch((err) => {
         toast.warning("Invalid password or email", {
-            
             position: "top-center",
             autoClose: 5000,
             hideProgressBar: false,
@@ -151,7 +159,7 @@ const HeaderNew = () => {
       });
   };
   
-  // Verify bo'lganda ishlaydigan funksiya
+  // Sign updam keyin Verify bo'lganda ishlaydigan funksiya
   const newOtp = otp.join("");
   const isVerify = () => {
     axios
@@ -168,7 +176,7 @@ const HeaderNew = () => {
       .catch((err) => {
         console.log(err);
       });
-    alert(newOtp);
+
   };
   //handelVerifyChange
   const handelVerifyChange = (element, index) => {
@@ -184,18 +192,6 @@ const HeaderNew = () => {
       }
     }
   };
-  // sendNumberSms
-  const sendEmail = () => {
-    setVerify(true);
-    setForgotModal(false);
-  };
-  //Forgotni funksiyalari va statelari
-
-  const changePassword = () => {
-    axios.post(`${api_url}/`);
-    nav("/");
-    setUpdatePasswordModal(false);
-  };
   const handleKeyDown = (e, index) => {
     if (e.key === "Backspace") {
       const newOtp = [...otp];
@@ -210,6 +206,159 @@ const HeaderNew = () => {
       }
     }
   };
+  //Forgot jarayoni uchun yoziladigan funksiyalar
+  // sendSms
+  const sendEmail = () => {
+    if(verifyType==="forgot"){
+        axios.post(`${api_url}/user/forgot-password/`, identifier)
+        .then(res=>{
+            if(res.status===200){
+                setVerify(true);
+                setForgotModal(false);
+            }
+        })
+        .catch(err=>{
+            console.log(err)
+            console.log(identifier)
+    
+        })
+    }
+    else{
+        axios.post(`${api_url}/user/reset-password/`, identifier,
+            {
+                headers:{
+                    Authorization:`Bearer ${invest_token}`
+                }
+            }
+        )
+        .then(res=>{
+            if(res.status===200){
+                setVerify(true);
+                setForgotModal(false);
+            }
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+    }
+   
+  };
+  const sendCode = () =>{
+    if(verifyType==="forgot"){
+        axios.post(`${api_url}/user/forgot-password-verify-otp/`, {otp:newOtp})
+        .then(res=>{
+            if(res.status===200){
+                console.log(res)
+                setVerify(false)
+                setUpdatePasswordModal(true)
+                setReset_token(res?.data?.reset_token)
+                toast.success(`${res?.data?.message}`, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                  });
+                setOtp(Array(6).fill(""));
+            }
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+    }
+    else{
+        axios.post(`${api_url}/user/reset-password-verify-otp/`, {otp:newOtp}, 
+           {
+            headers:{
+                Authorization: `Bearer ${invest_token}`
+            }
+           }
+        )
+        .then(res=>{
+            if(res.status===200){
+                console.log(res)
+                setVerify(false)
+                setUpdatePasswordModal(true)
+                setReset_token(res?.data?.reset_token)
+                toast.success(`${res?.data?.message}`, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                  });
+                setOtp(Array(6).fill(""));
+            }
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+    }
+   
+  }
+  const sendPassword = ()=>{
+    if(verifyType==="forgot"){
+        axios.post(`${api_url}/user/confirm-forgot-password/`,{...forgot, reset_token:reset_token})
+        .then(res=>{
+            if(res.status===200){
+                console.log(res)
+                toast.success(`${res?.data?.message}`, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                  });
+                setUpdatePasswordModal(false);
+                setForgot(forgotPasswordState)
+            }
+        })  
+        .catch(err=>{
+            console.log(err)
+        })
+    }
+    else{
+        axios.post(`${api_url}/user/confirm-reset-password/`,{...forgot, reset_token:reset_token},
+            {
+                headers:{
+                    Authorization:`Bearer ${invest_token}`
+                }
+            }
+        )
+        .then(res=>{
+            if(res.status===200){
+                console.log(res)
+                toast.success(`${res?.data?.message}`, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                  });
+                setUpdatePasswordModal(false);
+                setForgot(forgotPasswordState)
+            }
+        })  
+        .catch(err=>{
+            console.log(err)
+        })
+    }
+  }
+  //Reset uchun yoziladigan funksiyalar
+ 
+ 
   /* for sticky header */
   const [headerFix, setheaderFix] = React.useState(false);
   useEffect(() => {
@@ -217,9 +366,7 @@ const HeaderNew = () => {
       setheaderFix(window.scrollY > 50);
     });
   }, []);
-
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
   useEffect(() => {
     var mainMenu = document.getElementById("OpenMenu");
     if (mainMenu) {
@@ -230,7 +377,6 @@ const HeaderNew = () => {
       }
     }
   });
-
   // Menu dropdown list
   const reducer = (previousState, updatedState) => ({
     ...previousState,
@@ -334,7 +480,8 @@ const HeaderNew = () => {
                       <Dropdown.Item
                         href="#/reset-password"
                         onClick={() => (
-                          setForgotModal(true), setModalType("reset")
+                          setForgotModal(true), 
+                          setVerifyType("reset")
                         )}
                       >
                         Reset Password
@@ -553,7 +700,8 @@ const HeaderNew = () => {
                 onClick={() => (
                   setForgotModal(true),
                   setloginModal(false),
-                  setModalType("forgot")
+                  setModalType("forgot"),
+                  setVerifyType("forgot")
                 )}
               >
                 Forgot password?
@@ -594,9 +742,11 @@ const HeaderNew = () => {
         onHide={setForgotModal}
         centered
       >
-        {modaltype === "forgot" ? (
+        
           <div className="reset-password" id="reset-password">
-            <h2 className="title">Forgot Password</h2>
+            <h2 className="title">
+                {(verifyType==="forgot")?"Forgot Password":"Reset Password"}
+            </h2>
             <form onSubmit={(e) => formSubmit(e, sendEmail)}>
               <div className="form-group password-icon-bx">
                 <i className="fa fa-lock"></i>
@@ -610,9 +760,9 @@ const HeaderNew = () => {
                   type="email"
                   className="form-control"
                   placeholder="Enter your email"
-                  name="idenfiter"
+                  name="identifier"
                   value={identifier?.identifier}
-                  onChange={(e) => setIdentifier(e?.target?.value)}
+                  onChange={handelId}
                 />
               </div>
               <div className="form-group">
@@ -623,60 +773,10 @@ const HeaderNew = () => {
                   Send reset link
                 </button>
               </div>
-              <Link
-                to={"#"}
-                className="sign-text d-block"
-                data-bs-toggle="collapse"
-                onClick={() => (
-                  setForgotModal(false), setUpdatePasswordModal(true)
-                )}
-              >
-                Back
-              </Link>
+              
             </form>
           </div>
-        ) : (
-          <div className="reset-password" id="reset-password">
-            <h2 className="title">Reset Password</h2>
-            <form onSubmit={(e) => formSubmit(e, sendEmail)}>
-              <div className="form-group password-icon-bx">
-                <i className="fa fa-lock"></i>
-                <p>
-                  Enter your email address associated with your account, and
-                  we'll email you a link to reset your password...
-                </p>
-              </div>
-              <div className="form-group">
-                <input
-                  type="email"
-                  className="form-control"
-                  placeholder="Enter your email"
-                  name="idenfiter"
-                  value={identifier?.identifier}
-                  onChange={(e) => setIdentifier(e?.target?.value)}
-                />
-              </div>
-              <div className="form-group">
-                <button
-                  type="submit"
-                  className="btn btn-outline-primary btn-block"
-                >
-                  Send reset link
-                </button>
-              </div>
-              <Link
-                to={"#"}
-                className="sign-text d-block"
-                data-bs-toggle="collapse"
-                onClick={() => (
-                  setForgotModal(false), setUpdatePasswordModal(true)
-                )}
-              >
-                Back
-              </Link>
-            </form>
-          </div>
-        )}
+        
       </Modal>
       {/* Sign Up Modal */}
       <Modal
@@ -945,16 +1045,28 @@ const HeaderNew = () => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button
+        {(verifyType==="forgot")&&(
+            <Button
             className="py-2"
             variant="secondary"
-            onClick={() => (setVerify(false), setUpdatePasswordModal(true))}
+            onClick={sendCode}
           >
-            Close
+           Verify Otp Forgot
           </Button>
-          <Button className="py-2" onClick={isVerify} variant="primary">
-            Verify OTP
+        )}
+        {(verifyType==="signup")&&(
+            <Button className="py-2" onClick={isVerify} variant="primary">
+            Verify OTP Signup
           </Button>
+        )
+        }
+         {(verifyType==="reset")&&(
+            <Button className="py-2" onClick={sendCode} variant="primary">
+            Verify Otp Reset
+          </Button>
+        )
+        }
+          
         </Modal.Footer>
       </Modal>
       {/* Forgot Passwordni yangilash uchun  */}
@@ -964,9 +1076,10 @@ const HeaderNew = () => {
         onHide={() => setUpdatePasswordModal(false)}
         centered
       >
+        
         <h2 className="title">Change Password</h2>
 
-        <form className="" onSubmit={(e) => formSubmit(e, changePassword)}>
+        <form className="" onSubmit={(e) => formSubmit(e, sendPassword)}>
           <div className="form-group">
             <label htmlFor="password" className="form-label">
               Password
@@ -975,8 +1088,8 @@ const HeaderNew = () => {
               type="password"
               className="form-control"
               placeholder="New password"
-              name="password1"
-              value={forgot?.password1}
+              name="new_password"
+              value={forgot?.new_password}
               onChange={handelForgot}
             />
           </div>
@@ -988,8 +1101,8 @@ const HeaderNew = () => {
               type="password"
               className="form-control"
               placeholder="Confirm password"
-              name="password2"
-              value={forgot?.password2}
+              name="confirm_password"
+              value={forgot?.confirm_password}
               onChange={handelForgot}
             />
           </div>
