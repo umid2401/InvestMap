@@ -13,7 +13,7 @@ const BrowseFundraiser = () => {
     return (
         <>
             <div className="page-content bg-white">
-                <PageBanner maintitle="Fundraiser" pagetitle="Browse Fundraiser" background={bg}/>
+                {/* <PageBanner maintitle="Fundraiser" pagetitle="Browse Fundraiser" background={bg}/> */}
                 
                 <div className="content-inner-2">
                     <div className="container">
@@ -64,11 +64,11 @@ const BrowseFundraiser = () => {
                         </div>
                     </div>
                 </div>
-                <div className="call-action style-1 content-inner-1">
+                {/* <div className="call-action style-1 content-inner-1">
                     <div className="container">
                         <UpdateBlog />
                     </div>
-                </div>
+                </div> */}
             </div>   
         </>
     );

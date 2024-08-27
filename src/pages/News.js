@@ -49,7 +49,7 @@ const Blog = () => {
     return (
         <>
             <div className="page-content bg-white">
-                <PageBanner maintitle="Home" pagetitle="Blog " background={bg}/>
+                <PageBanner maintitle="Home" pagetitle="News " background={bg}/>
                 <section className="content-inner-2">
                     <div className="container">
                         <div className="row">					

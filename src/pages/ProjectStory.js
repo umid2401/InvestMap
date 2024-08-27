@@ -1,22 +1,16 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-
 import PageBanner from '../layouts/PageBanner';
 import CountUp from 'react-countup';
-
-
 import TestimonialSlider from '../components/Home/TestimonialSlider';
 import UpdateBlog from '../components/Home/UpdateBlog';
-
 import bg from '../assets/images/banner/bnr3.jpg';
 import large4 from '../assets/images/project/large/pic4.jpg';
 import large5 from '../assets/images/project/large/pic5.jpg';
 import large6 from '../assets/images/project/large/pic6.jpg';
-
 import avat1 from '../assets/images/avatar/avatar1.jpg';
 import avat2 from '../assets/images/avatar/avatar2.jpg';
 import avat3 from '../assets/images/avatar/avatar3.jpg';
-
 
 
 const ProjectStory = () => {

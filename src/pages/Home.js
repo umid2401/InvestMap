@@ -15,13 +15,11 @@ import main from "./../assets/images/main-slider/pic1.png";
 import bg10 from "../assets/images/background/bg10.png";
 import sideimage from "../assets/images/side-images/pic1.png";
 import shape3 from "../assets/images/side-images/shape3.png";
-import shape1 from "../assets/images/pattern/shape1.png";
-
-import shape5 from "../assets/images/pattern/shape5.png";
-import shape6 from "../assets/images/pattern/shape6.png";
 
 import { IMAGES } from "../constant/theme";
-import { Accordion } from "react-bootstrap";
+import FaqComponent from "../components/FaqComponent";
+import ContactComponent from "../components/ContactComponent";
+
 
 const Home = () => {
   const modalRef = useRef();
@@ -31,24 +29,8 @@ const Home = () => {
     changePrimaryColor("color-skin-1");
   }, []);
   //Accord const
-  const accordBlog = [
-    { title: "Cras turpis felis, elementum sed mi at arcu ?" },
-    { title: "Vestibulum nibh risus, in neque eleifendulputate ?" },
-    { title: "Donec maximus, sapien id auctor ornare ?" },
-  ];
-  const cardBlog = [
-    {
-      title: "Trusted Partner",
-      subtitle: "394-091-3312",
-      icon: "flaticon-phone-call-1",
-    },
-    { title: "Mail", subtitle: "support@akcel.com", icon: "flaticon-email" },
-    {
-      title: "Our Address",
-      subtitle: "832  Thompson Drive, San Fransisco, United States",
-      icon: "flaticon-pin",
-    },
-  ];
+  
+  
   return (
     <>
       <div className="page-content bg-white">
@@ -239,187 +221,11 @@ const Home = () => {
           <img src={IMAGES.Shape6} className="shape-4 rotating" alt="shape" />
           <img src={IMAGES.Shape6} className="shape-2 rotating" alt="shape" />
         </section>
-        <section className="flex justify-content-center my-5 overflow-hidden">
-          <div className="container">
-            <div className="w-100 align-self-center mx-auto ">
-              <div className="section-head m-b30">
-                <h2 className="title text-center">What Is Akcel ?</h2>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing do eiusmod
-                  tempor incididunt ut labore et dolore magna aliqua.
-                </p>
-              </div>
-              <Accordion
-                className="accordion dz-accordion accordion-sm"
-                id="accordionFaq1"
-              >
-                {accordBlog.map((item, index) => (
-                  <Accordion.Item
-                    className="accordion-item"
-                    key={index}
-                    eventKey={index}
-                  >
-                    <Accordion.Header as="h2" id="headingOne1">
-                      {item.title}
-                      <span className="toggle-close"></span>
-                    </Accordion.Header>
-                    <div
-                      id="collapseOne1"
-                      className="accordion-collapse "
-                      eventKey={index}
-                    >
-                      <Accordion.Body>
-                        <p className="m-b0">
-                          Vestibulum nibh risus, lobortis in neque eleifend,
-                          varius vulputate sem. Donec maximus, sapien id auctor
-                          ornare, odio mi luctus massa, id rhoncus velit purus
-                          eu turpis onec aliquet mauris est.
-                        </p>
-                      </Accordion.Body>
-                    </div>
-                  </Accordion.Item>
-                ))}
-              </Accordion>
-            </div>
-          </div>
-        </section>
-        <section className="content-inner-1 bg-light section-pattren1">
-          <div className="container">
-            <div className="row justify-content-center">
-              {cardBlog.map((item, ind) => (
-                <div className="col-lg-4 col-md-6 m-b20" key={ind}>
-                  <div className="icon-bx-wraper box-hover style-3">
-                    <div className="icon-lg">
-                      <Link to={"/services-details"} className="icon-cell">
-                        <i className={item.icon}></i>
-                      </Link>
-                    </div>
-                    <div className="icon-content">
-                      <h5 className="dz-tilte m-b5 text-capitalize">
-                        {item.title}
-                      </h5>
-                      <span>{item.subtitle}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <img src={shape1} className="shape-1 move-1" alt="shape" />
-          <img src={shape3} className="shape-3 move-1" alt="shape" />
-          <img src={shape5} className="shape-4 rotating" alt="shape" />
-          <img src={shape6} className="shape-5 rotating" alt="shape" />
-        </section>
-        
+        <FaqComponent/>
+        <ContactComponent/>
       </div>
 
-      {/* Modals */}
-      {/* <Modal className="modal fade modal-wrapper" id="modalDonate" show={donateModal} onHide={setDonateModal} centered> 
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <h5 className="modal-title">Choose a donation amount</h5>
-                        <button type="button" className="btn-close" onClick={()=>setDonateModal(false)}><i className="flaticon-close"></i></button>
-                    </div>
-                    <div className="modal-body">
-                        <form onSubmit={(e)=>FormSubmit(e)}>
-                            <div className="row">
-                                <div className="col-lg-12">
-                                    <div className="tag-donate style-1">
-                                        <div className="donate-categories">
-                                            <div className="form-check">
-                                                <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
-                                                <label className="form-check-label" htmlFor="flexRadioDefault1">
-                                                    $500
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div className="donate-categories">
-                                            <div className="form-check">
-                                                <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" defaultChecked  />
-                                                <label className="form-check-label" htmlFo="flexRadioDefault2">
-                                                    $1000
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div className="donate-categories">
-                                            <div className="form-check">
-                                                <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" defaultChecked />
-                                                <label className="form-check-label" htmlFo="flexRadioDefault3">
-                                                    $2000
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div className="donate-categories">
-                                            <div className="form-check">
-                                                <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault4" defaultChecked />
-                                                <label className="form-check-label" htmlFo="flexRadioDefault4">
-                                                    $5000
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <p>Most Donors donate approx <span>$1000</span> to this Fundraiser</p>
-                                    </div>
-                                </div>
-                                <div className="col-lg-12">
-                                    <div className="form-group">
-                                        <label className="form-label">Other Amount</label>
-                                        <div className="input-group">
-                                            <input type="number" className="form-control"  placeholder="Other Amount" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-lg-12">
-                                    <div className="form-group">
-                                        <label className="form-label">Name</label>
-                                        <div className="input-group">
-                                            <input name="dzName" required="" type="text" className="form-control" placeholder="Jakob Bothman" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-lg-12">
-                                    <div className="form-group">
-                                        <label className="form-label">Email address</label>
-                                        <div className="input-group">
-                                            <input name="dzEmail" required type="text" className="form-control" placeholder="info@mail.com" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-lg-12">
-                                    <div className="form-group">
-                                        <label className="form-label">Phone Number</label>
-                                        <div className="input-group">
-                                            <input type="number" className="form-control" placeholder="Phone Number" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-lg-12">
-                                    <div className="form-group">
-                                        <label className="form-label">Address</label>
-                                        <div className="input-group">
-                                            <input required type="text" className="form-control" placeholder="Address" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-lg-12">
-                                    <div className="form-group">
-                                        <label className="form-label">Pancard</label>
-                                        <div className="input-group">
-                                            <input type="number" className="form-control" placeholder="Pancard" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-lg-12">
-                                    <div className="form-group mb-0 text-center">
-                                        <button name="submit" type="submit" value="Submit" className="btn btn-primary btn-block">Proceed To Pay</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>                
-            </Modal> */}
-      <DonateModal ref={modalRef} />
-    </>
+       </>
   );
 };
 export default Home;
