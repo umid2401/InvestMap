@@ -17,9 +17,7 @@ import { Modal } from "react-bootstrap";
 const BecomeFundraiser = () => {
   //api
   const api_url = process.env.REACT_APP_INVEST_MAP_API;
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI0OTA2OTA2LCJpYXQiOjE3MjQ4MjA1MDYsImp0aSI6Ijc1ZDVhNWJlYmFmNjRlOTU5ZDg4M2M2ZjBhNzY2MDQ5IiwidXNlcl9pZCI6MX0.DDY6wa-lYEajKP1p8Ykfj1-2UPbxbFuixk0HDBITtJE";
-
+  const token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI0OTE0MzkzLCJpYXQiOjE3MjQ4Mjc5OTMsImp0aSI6IjA3NzVjZTM2NjNhYTRkOWM5MWZjNDM2YWVkMjU5YWI0IiwidXNlcl9pZCI6Mn0.JzyEKvgnjUXoq5p_YuoXl_BtnY7iqNTcNDhuHD4Yq64"
   //steplar
   const [goSteps, setGoSteps] = useState(0);
   //modal uchun
@@ -37,7 +35,8 @@ const BecomeFundraiser = () => {
       .post(`${api_url}/api/company/create/step1/`, firstData,
 		{
 			headers:{
-				Authorization:`Bearer ${token}`
+				Authorization:`Bearer ${token}`,
+				 'content-type': 'multipart/form-data'
 			}
 		}
 	  )

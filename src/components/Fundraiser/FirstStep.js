@@ -5,7 +5,7 @@ const FirstStep = ({setData}) => {
     legal_name: "",
     TIN: "",
     date_of_registration: "",
-    national_classifier_of_activies: "",
+    national_classifier_of_activities:"",
     legal_address: "",
     name_of_director: "",
     director_TIN: "",
@@ -102,9 +102,9 @@ const FirstStep = ({setData}) => {
             <input
               type="text"
               className="form-control"
-              id="national_classifier_of_activies"
-              name="national_classifier_of_activies"
-              value={state.national_classifier_of_activies}
+              id="national_classifier_of_activities"
+              name="national_classifier_of_activities"
+              value={state.national_classifier_of_activities}
               onChange={handelChange}
               placeholder="Enter National Classifier"
             />
@@ -164,7 +164,7 @@ const FirstStep = ({setData}) => {
               Share Capital
             </label>
             <input
-              type="text"
+              type="number"
               className="form-control"
               id="share_capital"
               name="share_capital"
@@ -196,7 +196,7 @@ const FirstStep = ({setData}) => {
               Number of Employees
             </label>
             <input
-              type="text"
+              type="number"
               className="form-control"
               id="number_of_employees"
               name="number_of_employees"

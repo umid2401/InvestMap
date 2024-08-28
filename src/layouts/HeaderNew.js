@@ -781,6 +781,7 @@ const api_url = process.env.REACT_APP_INVEST_MAP_API;
               <div className="div d-flex gap-1">
                 <input
                   className="form-check-input"
+                  required
                   type="radio"
                   name="role"
                   value="investor"
@@ -795,6 +796,7 @@ const api_url = process.env.REACT_APP_INVEST_MAP_API;
               <div className="div d-flex gap-1">
                 <input
                   className="form-check-input"
+                  required
                   type="radio"
                   name="role"
                   value="company"
