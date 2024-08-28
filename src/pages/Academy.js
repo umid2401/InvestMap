@@ -1,8 +1,8 @@
-import React,{useState,useContext, useEffect} from 'react';
+import React,{useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
-import {Accordion, Modal} from 'react-bootstrap';
+// import {Accordion, Modal} from 'react-bootstrap';
 import CountUp from 'react-countup';
-import ModalVideo from 'react-modal-video'
+// import ModalVideo from 'react-modal-video'
 import 'react-modal-video/css/modal-video.min.css';
 
 //componenet
@@ -29,11 +29,11 @@ const Home3 = () => {
    
     const [readModal,setReadModal] = useState(false);
     const [isOpen, setOpen] = useState(false);
-    const nav = useNavigate();
-    const FormSubmit = (e) => {
-        e.preventDefault();
-        nav("/contact-us");
-    };
+    // const nav = useNavigate();
+    // const FormSubmit = (e) => {
+    //     e.preventDefault();
+    //     nav("/contact-us");
+    // };
     return (
         <>
             <div className="page-wraper page-wraper-sidebar">

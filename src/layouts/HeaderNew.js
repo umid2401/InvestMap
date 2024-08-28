@@ -18,6 +18,8 @@ const HeaderNew = () => {
   const [reset_token, setReset_token] = useState("")
 //   const invest_token = localStorage.getItem("invest_token")
 const invest_token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI0ODQxNTg5LCJpYXQiOjE3MjQ3NTUxODksImp0aSI6IjBhODRjM2VlNWYxODQzNzM5YmRjOGExYzhkOTMwYjM4IiwidXNlcl9pZCI6MX0.uwPuSUjr5wObN7eqrzl22-_CVoqorecJcBUO8FRpKIs"
+const api_url = process.env.REACT_APP_INVEST_MAP_API;
+//API FOR INVESTMAP
   const [role, setRole]=useState("");
   //invest_token
   //react hooks
@@ -29,12 +31,9 @@ const invest_token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYW
   const [signupModal, setSignupModal] = useState(false);
   const [updatePasswordModal, setUpdatePasswordModal] = useState(false);
   const [verify, setVerify] = useState(false);
-  const [modaltype, setModalType] = useState("forgot");
   const [verifyType, setVerifyType] = useState("signup")
   const [showDropdown, setShowDropdown] = useState(false);
   //Modals end
-  //API FOR INVESTMAP
-  const api_url = process.env.REACT_APP_INVEST_MAP_API;
   //state
   const signUpState = {
     role: "",
@@ -158,7 +157,6 @@ const invest_token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYW
           });
       });
   };
-  
   // Sign updam keyin Verify bo'lganda ishlaydigan funksiya
   const newOtp = otp.join("");
   const isVerify = () => {
@@ -206,7 +204,7 @@ const invest_token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYW
       }
     }
   };
-  //Forgot jarayoni uchun yoziladigan funksiyalar
+  //Forgot va Reset jarayoni uchun yoziladigan funksiyalar
   // sendSms
   const sendEmail = () => {
     if(verifyType==="forgot"){
@@ -356,9 +354,6 @@ const invest_token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYW
         })
     }
   }
-  //Reset uchun yoziladigan funksiyalar
- 
- 
   /* for sticky header */
   const [headerFix, setheaderFix] = React.useState(false);
   useEffect(() => {
@@ -666,7 +661,6 @@ const invest_token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYW
         centered
       >
         <h2 className="title">Sign In</h2>
-
         <form className="" onSubmit={(e) => formSubmit(e, login)}>
           <div className="form-group">
             <label htmlFor="email" className="form-label">
@@ -700,7 +694,6 @@ const invest_token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYW
                 onClick={() => (
                   setForgotModal(true),
                   setloginModal(false),
-                  setModalType("forgot"),
                   setVerifyType("forgot")
                 )}
               >
@@ -714,12 +707,6 @@ const invest_token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYW
               Sign In
             </button>
           </div>
-          {/* <div className="form-group">
-                        <Link to={"#"} className="btn facebook btn-block"><i className="fa-brands fa-facebook-f m-r10"></i>Log in with Facebook</Link>
-                    </div>
-                    <div className="form-group">
-                        <Link to={"#"} className="btn google-plus btn-block"><i className="fa-brands fa-google m-r10"></i>Log in with Google</Link>
-                    </div> */}
           <div className="sign-text">
             <span>
               Don't have a Crowdfunding account?
@@ -742,7 +729,6 @@ const invest_token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYW
         onHide={setForgotModal}
         centered
       >
-        
           <div className="reset-password" id="reset-password">
             <h2 className="title">
                 {(verifyType==="forgot")?"Forgot Password":"Reset Password"}
@@ -1076,9 +1062,7 @@ const invest_token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYW
         onHide={() => setUpdatePasswordModal(false)}
         centered
       >
-        
         <h2 className="title">Change Password</h2>
-
         <form className="" onSubmit={(e) => formSubmit(e, sendPassword)}>
           <div className="form-group">
             <label htmlFor="password" className="form-label">
