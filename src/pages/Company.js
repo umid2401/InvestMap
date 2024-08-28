@@ -17,7 +17,7 @@ import { Modal } from "react-bootstrap";
 const BecomeFundraiser = () => {
   //api
   const api_url = process.env.REACT_APP_INVEST_MAP_API;
-  const token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI0OTE0MzkzLCJpYXQiOjE3MjQ4Mjc5OTMsImp0aSI6IjA3NzVjZTM2NjNhYTRkOWM5MWZjNDM2YWVkMjU5YWI0IiwidXNlcl9pZCI6Mn0.JzyEKvgnjUXoq5p_YuoXl_BtnY7iqNTcNDhuHD4Yq64"
+  const token = localStorage.getItem("invest_token");
   //steplar
   const [goSteps, setGoSteps] = useState(0);
   //modal uchun

@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 
 const SecondStep = ({setData}) => {
   const initialState = {
-    name_of_bank: "Xalq Bank",
-    MFO: "256552",
-    account_number_1: "4556656",
+    name_of_bank: "",
+    MFO: "",
+    account_number_1: "",
+    account_number_2: "",
   };
 
   const [formState, setFormState] = useState(initialState);
@@ -64,6 +65,20 @@ const SecondStep = ({setData}) => {
             name="account_number_1"
             placeholder="Account Number 1"
             value={formState.account_number_1}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="mb-3 col-12 col-md-6">
+          <label htmlFor="account_number_1" className="form-label">
+            Account Number 2
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="account_number_2"
+            name="account_number_2"
+            placeholder="Account Number 2"
+            value={formState.account_number_2}
             onChange={handleChange}
           />
         </div>

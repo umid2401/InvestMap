@@ -12,6 +12,13 @@ import { toast } from "react-toastify";
 // import logo_new1 from "./../assets/images/logo_new1.png";
 
 const HeaderNew = () => {
+  const [data, setData]=useState();
+
+
+
+
+
+
   //for otp code
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [verification_token, setVerification_token] = useState("");
@@ -80,8 +87,7 @@ const api_url = process.env.REACT_APP_INVEST_MAP_API;
   //sign up bo'lganda ishlaydigan  funksiya
   
   const signUp = () => {
-    axios
-      .post(`${api_url}/user/register/`, sign_up)
+    axios.post(`${api_url}/user/register/`, sign_up)
       .then((res) => {
           if(res.status===201){
              setVerification_token(res?.data?.verification_token);
@@ -118,11 +124,11 @@ const api_url = process.env.REACT_APP_INVEST_MAP_API;
   };
   //login bo'lganda ishlaydigan funksiya
   const login = () => {
-    axios
-      .post(`${api_url}/user/login/`, sign_in)
+    axios.post(`${api_url}/user/login/`, sign_in)
       .then((res) => {
         if (res.status===200) {
-         console.log(res);
+          const token = res?.data?.access;
+          localStorage.setItem("invest_token",token);
           setloginModal(false);
           console.log(sign_up)
           setSign_in(signInstate);
