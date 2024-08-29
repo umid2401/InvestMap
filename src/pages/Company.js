@@ -6,7 +6,7 @@ import PageBanner from "../layouts/PageBanner";
 import FirstStep from "../components/Fundraiser/FirstStep";
 import SecondStep from "../components/Fundraiser/SecondStep";
 import ThirdStep from "../components/Fundraiser/ThirdStep";
-import FourthStep from "../components/Fundraiser/FourthStep";
+// import FourthStep from "../components/Fundraiser/FourthStep";
 
 //images
 import bg from "../assets/images/banner/bnr3.jpg";
@@ -17,7 +17,7 @@ import { Modal } from "react-bootstrap";
 const BecomeFundraiser = () => {
   //api
   const api_url = process.env.REACT_APP_INVEST_MAP_API;
-  const token = localStorage.getItem("invest_token");
+  const token = localStorage.getItem("access_token");
   //steplar
   const [goSteps, setGoSteps] = useState(0);
   //modal uchun
@@ -31,80 +31,32 @@ const BecomeFundraiser = () => {
     sendData();
   };
   const sendFirstData = () => {
-    axios
-      .post(`${api_url}/api/company/create/step1/`, firstData,
-		{
-			headers:{
-				Authorization:`Bearer ${token}`,
-				 'content-type': 'multipart/form-data'
-			}
-		}
-	  )
-      .then((res) => {
-        if (res?.status === 200) {
-          setGoSteps(1);
-          scrollToTop();
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    setGoSteps(1);
+    scrollToTop();
   };
   const sendSecondData = () => {
-    axios
-      .post(`${api_url}/api/company/create/step2/`, secondData,
-		{
-			headers:{
-				Authorization:`Bearer ${token}`
-			}
-		}
-	  )
-      .then((res) => {
-        if (res?.status === 200) {
-          setGoSteps(2);
-          scrollToTop();
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    setGoSteps(2);
+    scrollToTop();
   };
   const sendThirdData = () => {
+    setModal(true);
+  };
+  const sendFinallyData = () => {
     axios
-      .post(`${api_url}/api/company/create/step3/`, thirdData,
-		{
-			headers:{
-				Authorization:`Bearer ${token}`
-			}
-		}
-	  )
+      .post(`${api_url}/api/company/create/final/`,{...firstData, ...secondData, ...thirdData} , {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
-        if (res?.status === 200) {
-			setModal(true)
+        if (res.status === 201) {
+          setModal(false);
         }
       })
       .catch((err) => {
         console.log(err);
       });
   };
-  const sendFinallyData = () =>{
-	axios.post(`${api_url}/api/company/create/final/`,
-    {
-			headers:{
-				Authorization:`Bearer ${token}`
-			}
-		}
-  )
-	.then(res=>{
-		if(res.status===201){
-      setModal(false)
-      
-    }
-	})
-	.catch(err=>{
-		console.log(err)
-	})
-  }
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -149,8 +101,7 @@ const BecomeFundraiser = () => {
                         <div className="text-end toolbar toolbar-bottom p-2">
                           <button
                             className="btn sw-btn-next sw-btn ms-1npm"
-							onClick={(e)=>formSubmit(e, sendFirstData)}
-
+                            onClick={(e) => formSubmit(e, sendFirstData)}
                           >
                             Next
                           </button>
@@ -161,15 +112,15 @@ const BecomeFundraiser = () => {
                       <>
                         <SecondStep setData={setSecondData} />
                         <div className="text-end toolbar toolbar-bottom p-2">
-						            <button
+                          <button
                             className="btn sw-btn-prev sw-btn me-1"
-                            onClick={()=>setGoSteps(0)}
+                            onClick={() => setGoSteps(0)}
                           >
                             Previous
                           </button>
                           <button
                             className="btn sw-btn-next sw-btn ms-1"
-                            onClick={(e)=>formSubmit(e, sendSecondData)}
+                            onClick={(e) => formSubmit(e, sendSecondData)}
                           >
                             Next
                           </button>
@@ -182,13 +133,13 @@ const BecomeFundraiser = () => {
                         <div className="text-end toolbar toolbar-bottom p-2">
                           <button
                             className="btn sw-btn-prev sw-btn me-1"
-                            onClick={()=>setGoSteps(2)}
+                            onClick={() => setGoSteps(2)}
                           >
                             Previous
                           </button>
                           <button
                             className="btn sw-btn-next sw-btn ms-1"
-							onClick={(e)=>formSubmit(e, sendThirdData)}
+                            onClick={(e) => formSubmit(e, sendThirdData)}
                           >
                             Next
                           </button>
@@ -207,24 +158,21 @@ const BecomeFundraiser = () => {
                           Small Modal
                         </Modal.Title>
                       </Modal.Header>
-                      <Modal.Body>
-						Malumotlar yuborilsinmi
-					  </Modal.Body>
-					  <Modal.Footer>
-					  <button
-                            className="title btn sw-btn-next sw-btn ms-1npmm btn-warning text-white py-2"
-                           onClick={()=>setModal(false)}
-                          >
-                            Close
-                          </button>
-						  <button
-                            className="btn sw-btn-next sw-btn ms-1npm btn-primary py-2"
-                            onClick={(e)=>formSubmit(e, sendFinallyData)}
-                          >
-                            Send
-                          </button>
-					  </Modal.Footer>
-					 
+                      <Modal.Body>Malumotlar yuborilsinmi</Modal.Body>
+                      <Modal.Footer>
+                        <button
+                          className="title btn sw-btn-next sw-btn ms-1npmm btn-warning text-white py-2"
+                          onClick={() => setModal(false)}
+                        >
+                          Close
+                        </button>
+                        <button
+                          className="btn sw-btn-next sw-btn ms-1npm btn-primary py-2"
+                          onClick={(e) => formSubmit(e, sendFinallyData)}
+                        >
+                          Send
+                        </button>
+                      </Modal.Footer>
                     </Modal>
                   </div>
                 </div>

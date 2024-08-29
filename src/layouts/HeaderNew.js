@@ -10,24 +10,19 @@ import newlogo from "./../assets/images/new_logo.png";
 import axios from "axios";
 import { toast } from "react-toastify";
 // import logo_new1 from "./../assets/images/logo_new1.png";
-
 const HeaderNew = () => {
-  const [data, setData]=useState();
-
-
-
-
-
-
+  const [data, setData] = useState();
+  const token = localStorage.getItem("access_token");
   //for otp code
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [verification_token, setVerification_token] = useState("");
-  const [reset_token, setReset_token] = useState("")
-//   const invest_token = localStorage.getItem("invest_token")
-const invest_token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI0ODQxNTg5LCJpYXQiOjE3MjQ3NTUxODksImp0aSI6IjBhODRjM2VlNWYxODQzNzM5YmRjOGExYzhkOTMwYjM4IiwidXNlcl9pZCI6MX0.uwPuSUjr5wObN7eqrzl22-_CVoqorecJcBUO8FRpKIs"
-const api_url = process.env.REACT_APP_INVEST_MAP_API;
-//API FOR INVESTMAP
-  const [role, setRole]=useState("");
+  const [reset_token, setReset_token] = useState("");
+  //   const invest_token = localStorage.getItem("invest_token")
+  const invest_token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI0ODQxNTg5LCJpYXQiOjE3MjQ3NTUxODksImp0aSI6IjBhODRjM2VlNWYxODQzNzM5YmRjOGExYzhkOTMwYjM4IiwidXNlcl9pZCI6MX0.uwPuSUjr5wObN7eqrzl22-_CVoqorecJcBUO8FRpKIs";
+  const api_url = process.env.REACT_APP_INVEST_MAP_API;
+  //API FOR INVESTMAP
+  const [role, setRole] = useState("");
   //invest_token
   //react hooks
   const inputRefs = useRef([]);
@@ -38,7 +33,7 @@ const api_url = process.env.REACT_APP_INVEST_MAP_API;
   const [signupModal, setSignupModal] = useState(false);
   const [updatePasswordModal, setUpdatePasswordModal] = useState(false);
   const [verify, setVerify] = useState(false);
-  const [verifyType, setVerifyType] = useState("signup")
+  const [verifyType, setVerifyType] = useState("signup");
   const [showDropdown, setShowDropdown] = useState(false);
   //Modals end
   //state
@@ -78,59 +73,64 @@ const api_url = process.env.REACT_APP_INVEST_MAP_API;
     const { name, value } = e.target;
     setIdentifier({ ...identifier, [name]: value });
   };
-  
+
   //Formsubmit
   const formSubmit = (e, customAction) => {
     e.preventDefault();
     customAction();
   };
   //sign up bo'lganda ishlaydigan  funksiya
-  
+
   const signUp = () => {
-    axios.post(`${api_url}/user/register/`, sign_up)
+    axios
+      .post(`${api_url}/user/register/`, sign_up)
       .then((res) => {
-          if(res.status===201){
-             setVerification_token(res?.data?.verification_token);
-              setSignupModal(false);
-              setVerify(true);
-              setRole(sign_up?.role)
-              setSign_up(signUpState);
-              setVerifyType("signup")
-              toast.success(`${res?.data?.message}`, {
-                position: "top-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-              });
-          } 
-      })
-      .catch((err) => {
-        console.log(err)
-        toast.warning(`${err?.response?.data?.error}`, {
-            position: "top-left",
+        if (res.status === 201) {
+          setVerification_token(res?.data?.verification_token);
+          setSignupModal(false);
+          setVerify(true);
+          setRole(sign_up?.role);
+          setSign_up(signUpState);
+          setVerifyType("signup");
+          toast.success(`${res?.data?.message}`, {
+            position: "top-center",
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: "colored",
+            theme: "light",
           });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.warning(`${err?.response?.data?.error}`, {
+          position: "top-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       });
   };
   //login bo'lganda ishlaydigan funksiya
   const login = () => {
-    axios.post(`${api_url}/user/login/`, sign_in)
+    axios
+      .post(`${api_url}/user/login/`, sign_in)
       .then((res) => {
-        if (res.status===200) {
-          const token = res?.data?.access;
-          localStorage.setItem("invest_token",token);
+        if (res.status === 200) {
+          const { refresh, access } = res?.data;
+          console.log(access, refresh);
+          console.log(res.data);
+          localStorage.setItem("access_token", access);
+          localStorage.setItem("refresh_token", refresh);
           setloginModal(false);
-          console.log(sign_up)
+          console.log(sign_up);
           setSign_in(signInstate);
           toast.success(`${res?.data?.message}`, {
             position: "top-center",
@@ -144,35 +144,56 @@ const api_url = process.env.REACT_APP_INVEST_MAP_API;
           });
           if (role === "investor") {
             nav("/investor");
-          }
-          else{
+          } else {
             nav("/company");
           }
         }
       })
       .catch((err) => {
         toast.warning("Invalid password or email", {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       });
   };
+  const logOut = () => {
+    localStorage.removeItem("access_token");
+    setloginModal(true);
+  };
+  const refreshToken = () => {
+    axios
+      .post(`${api_url}/api/token/refresh/`, {
+        refresh: localStorage.getItem("refresh_token"),
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  // useEffect(() => {
+  //   refreshToken();
+  // }, [token]);
   // Sign updam keyin Verify bo'lganda ishlaydigan funksiya
   const newOtp = otp.join("");
   const isVerify = () => {
     axios
-      .post(`${api_url}/user/register-verify-otp/`, {otp:newOtp, verification_token}, {
-        headers: {
-        },
-      })
+      .post(
+        `${api_url}/user/register-verify-otp/`,
+        { otp: newOtp, verification_token },
+        {
+          headers: {},
+        }
+      )
       .then((res) => {
-        if (res.status===200) {
+        if (res.status === 200) {
           setVerify(false);
           setOtp(Array(6).fill(""));
         }
@@ -180,7 +201,6 @@ const api_url = process.env.REACT_APP_INVEST_MAP_API;
       .catch((err) => {
         console.log(err);
       });
-
   };
   //handelVerifyChange
   const handelVerifyChange = (element, index) => {
@@ -213,153 +233,158 @@ const api_url = process.env.REACT_APP_INVEST_MAP_API;
   //Forgot va Reset jarayoni uchun yoziladigan funksiyalar
   // sendSms
   const sendEmail = () => {
-    if(verifyType==="forgot"){
-        axios.post(`${api_url}/user/forgot-password/`, identifier)
-        .then(res=>{
-            if(res.status===200){
-                setVerify(true);
-                setForgotModal(false);
-            }
+    if (verifyType === "forgot") {
+      axios
+        .post(`${api_url}/user/forgot-password/`, identifier)
+        .then((res) => {
+          if (res.status === 200) {
+            setVerify(true);
+            setForgotModal(false);
+          }
         })
-        .catch(err=>{
-            console.log(err)
-            console.log(identifier)
-    
+        .catch((err) => {
+          console.log(err);
+          console.log(identifier);
+        });
+    } else {
+      axios
+        .post(`${api_url}/user/reset-password/`, identifier, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         })
+        .then((res) => {
+          if (res.status === 200) {
+            setVerify(true);
+            setForgotModal(false);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
-    else{
-        axios.post(`${api_url}/user/reset-password/`, identifier,
-            {
-                headers:{
-                    Authorization:`Bearer ${invest_token}`
-                }
-            }
-        )
-        .then(res=>{
-            if(res.status===200){
-                setVerify(true);
-                setForgotModal(false);
-            }
-        })
-        .catch(err=>{
-            console.log(err)
-        })
-    }
-   
   };
-  const sendCode = () =>{
-    if(verifyType==="forgot"){
-        axios.post(`${api_url}/user/forgot-password-verify-otp/`, {otp:newOtp})
-        .then(res=>{
-            if(res.status===200){
-                console.log(res)
-                setVerify(false)
-                setUpdatePasswordModal(true)
-                setReset_token(res?.data?.reset_token)
-                toast.success(`${res?.data?.message}`, {
-                    position: "top-center",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                  });
-                setOtp(Array(6).fill(""));
-            }
+  const sendCode = () => {
+    if (verifyType === "forgot") {
+      axios
+        .post(`${api_url}/user/forgot-password-verify-otp/`, { otp: newOtp })
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res);
+            setVerify(false);
+            setUpdatePasswordModal(true);
+            setReset_token(res?.data?.reset_token);
+            toast.success(`${res?.data?.message}`, {
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+            setOtp(Array(6).fill(""));
+          }
         })
-        .catch(err=>{
-            console.log(err)
-        })
-    }
-    else{
-        axios.post(`${api_url}/user/reset-password-verify-otp/`, {otp:newOtp}, 
-           {
-            headers:{
-                Authorization: `Bearer ${invest_token}`
-            }
-           }
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      axios
+        .post(
+          `${api_url}/user/reset-password-verify-otp/`,
+          { otp: newOtp },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         )
-        .then(res=>{
-            if(res.status===200){
-                console.log(res)
-                setVerify(false)
-                setUpdatePasswordModal(true)
-                setReset_token(res?.data?.reset_token)
-                toast.success(`${res?.data?.message}`, {
-                    position: "top-center",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                  });
-                setOtp(Array(6).fill(""));
-            }
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res);
+            setVerify(false);
+            setUpdatePasswordModal(true);
+            setReset_token(res?.data?.reset_token);
+            toast.success(`${res?.data?.message}`, {
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+            setOtp(Array(6).fill(""));
+          }
         })
-        .catch(err=>{
-            console.log(err)
-        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
-   
-  }
-  const sendPassword = ()=>{
-    if(verifyType==="forgot"){
-        axios.post(`${api_url}/user/confirm-forgot-password/`,{...forgot, reset_token:reset_token})
-        .then(res=>{
-            if(res.status===200){
-                console.log(res)
-                toast.success(`${res?.data?.message}`, {
-                    position: "top-center",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                  });
-                setUpdatePasswordModal(false);
-                setForgot(forgotPasswordState)
-            }
-        })  
-        .catch(err=>{
-            console.log(err)
+  };
+  const sendPassword = () => {
+    if (verifyType === "forgot") {
+      axios
+        .post(`${api_url}/user/confirm-forgot-password/`, {
+          ...forgot,
+          reset_token: reset_token,
         })
-    }
-    else{
-        axios.post(`${api_url}/user/confirm-reset-password/`,{...forgot, reset_token:reset_token},
-            {
-                headers:{
-                    Authorization:`Bearer ${invest_token}`
-                }
-            }
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res);
+            toast.success(`${res?.data?.message}`, {
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+            setUpdatePasswordModal(false);
+            setForgot(forgotPasswordState);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      axios
+        .post(
+          `${api_url}/user/confirm-reset-password/`,
+          { ...forgot, reset_token: reset_token },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         )
-        .then(res=>{
-            if(res.status===200){
-                console.log(res)
-                toast.success(`${res?.data?.message}`, {
-                    position: "top-center",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                  });
-                setUpdatePasswordModal(false);
-                setForgot(forgotPasswordState)
-            }
-        })  
-        .catch(err=>{
-            console.log(err)
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res);
+            toast.success(`${res?.data?.message}`, {
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+            setUpdatePasswordModal(false);
+            setForgot(forgotPasswordState);
+          }
         })
+        .catch((err) => {
+          console.log(err);
+        });
     }
-  }
+  };
   /* for sticky header */
   const [headerFix, setheaderFix] = React.useState(false);
   useEffect(() => {
@@ -378,6 +403,7 @@ const api_url = process.env.REACT_APP_INVEST_MAP_API;
       }
     }
   });
+
   // Menu dropdown list
   const reducer = (previousState, updatedState) => ({
     ...previousState,
@@ -441,55 +467,53 @@ const api_url = process.env.REACT_APP_INVEST_MAP_API;
                 <span></span>
               </button>
               <div className="extra-nav">
-                <div className="text-info">
-                  <Link
-                    to={"#"}
-                    className="badge text-light d-flex align-items-center gap-1   badge-primary "
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalLogin"
-                  >
-                    <i className="flaticon-logout mb-1"></i>
-                    <span className="" onClick={() => setloginModal(true)}>
-                      Login /
-                    </span>
-                    <span className="" onClick={() => setSignupModal(true)}>
-                      Sign Up
-                    </span>
-                  </Link>
-                </div>
-                <div>
-                  <Dropdown
-                    show={showDropdown}
-                    onClick={() => setShowDropdown(!showDropdown)}
-                  >
+                {token ? (
+                  <Dropdown className="extra-cell ">
                     <Dropdown.Toggle
-                      variant="link"
-                      id="dropdown-custom-components"
+                      className="btn btn-primary text-white py-2 px-3"
+                      variant="success"
+                      id="dropdown-basic"
                     >
-                      <img
-                        src="https://via.placeholder.com/40"
-                        alt="Profile"
-                        className="rounded-circle"
-                        style={{ width: "40px", height: "40px" }}
-                      />
+                      <i className="fa-solid fa-user"></i>
+                      <span className="m-l10">My Account</span>
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
-                      <Dropdown.Item href="#/profile">
-                        View Profile
+                      <Dropdown.Item onClick={logOut}>
+                        <i class="fas fa-sign-out-alt"></i> Logout
                       </Dropdown.Item>
                       <Dropdown.Item
-                        href="#/reset-password"
                         onClick={() => (
-                          setForgotModal(true), 
-                          setVerifyType("reset")
+                          setForgotModal(true), setVerifyType("reset")
                         )}
                       >
-                        Reset Password
+                        {" "}
+                        <i class="fas fa-key"></i> Reset Password
                       </Dropdown.Item>
-                      <Dropdown.Item href="#/logout">Logout</Dropdown.Item>
+                      <Dropdown.Item href="#/action-3">
+                        Something else here
+                      </Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
+                ) : (
+                  <div className="text-info">
+                    <Link
+                      to={"#"}
+                      className="badge text-light d-flex align-items-center gap-1   badge-primary "
+                      data-bs-toggle="modal"
+                      data-bs-target="#modalLogin"
+                    >
+                      <i className="flaticon-logout mb-1"></i>
+                      <span className="" onClick={() => setloginModal(true)}>
+                        Login /
+                      </span>
+                      <span className="" onClick={() => setSignupModal(true)}>
+                        Sign Up
+                      </span>
+                    </Link>
+                  </div>
+                )}
+                <div>
                 </div>
               </div>
               <div
@@ -735,40 +759,38 @@ const api_url = process.env.REACT_APP_INVEST_MAP_API;
         onHide={setForgotModal}
         centered
       >
-          <div className="reset-password" id="reset-password">
-            <h2 className="title">
-                {(verifyType==="forgot")?"Forgot Password":"Reset Password"}
-            </h2>
-            <form onSubmit={(e) => formSubmit(e, sendEmail)}>
-              <div className="form-group password-icon-bx">
-                <i className="fa fa-lock"></i>
-                <p>
-                  Enter your email address associated with your account, and
-                  we'll email you a link to reset your password...
-                </p>
-              </div>
-              <div className="form-group">
-                <input
-                  type="email"
-                  className="form-control"
-                  placeholder="Enter your email"
-                  name="identifier"
-                  value={identifier?.identifier}
-                  onChange={handelId}
-                />
-              </div>
-              <div className="form-group">
-                <button
-                  type="submit"
-                  className="btn btn-outline-primary btn-block"
-                >
-                  Send reset link
-                </button>
-              </div>
-              
-            </form>
-          </div>
-        
+        <div className="reset-password" id="reset-password">
+          <h2 className="title">
+            {verifyType === "forgot" ? "Forgot Password" : "Reset Password"}
+          </h2>
+          <form onSubmit={(e) => formSubmit(e, sendEmail)}>
+            <div className="form-group password-icon-bx">
+              <i className="fa fa-lock"></i>
+              <p>
+                Enter your email address associated with your account, and we'll
+                email you a link to reset your password...
+              </p>
+            </div>
+            <div className="form-group">
+              <input
+                type="email"
+                className="form-control"
+                placeholder="Enter your email"
+                name="identifier"
+                value={identifier?.identifier}
+                onChange={handelId}
+              />
+            </div>
+            <div className="form-group">
+              <button
+                type="submit"
+                className="btn btn-outline-primary btn-block"
+              >
+                Send reset link
+              </button>
+            </div>
+          </form>
+        </div>
       </Modal>
       {/* Sign Up Modal */}
       <Modal
@@ -1039,28 +1061,21 @@ const api_url = process.env.REACT_APP_INVEST_MAP_API;
           </Form>
         </Modal.Body>
         <Modal.Footer>
-        {(verifyType==="forgot")&&(
-            <Button
-            className="py-2"
-            variant="secondary"
-            onClick={sendCode}
-          >
-           Verify Otp Forgot
-          </Button>
-        )}
-        {(verifyType==="signup")&&(
+          {verifyType === "forgot" && (
+            <Button className="py-2" variant="secondary" onClick={sendCode}>
+              Verify Otp Forgot
+            </Button>
+          )}
+          {verifyType === "signup" && (
             <Button className="py-2" onClick={isVerify} variant="primary">
-            Verify OTP Signup
-          </Button>
-        )
-        }
-         {(verifyType==="reset")&&(
+              Verify OTP Signup
+            </Button>
+          )}
+          {verifyType === "reset" && (
             <Button className="py-2" onClick={sendCode} variant="primary">
-            Verify Otp Reset
-          </Button>
-        )
-        }
-          
+              Verify Otp Reset
+            </Button>
+          )}
         </Modal.Footer>
       </Modal>
       {/* Forgot Passwordni yangilash uchun  */}
