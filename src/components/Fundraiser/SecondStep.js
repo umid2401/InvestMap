@@ -20,9 +20,10 @@ const SecondStep = ({setData}) => {
   };
   useEffect(()=>{
     setData(formState)
-  },[formState,setData])
+  },[setData, formState])
   return (
     <>
+    <form action="">
       <div id="wizard_Service" className="tab-pane  row" role="tabpanel">
         <div className="mb-3 col-12 col-md-6">
           <label htmlFor="name_of_bank" className="form-label">
@@ -84,6 +85,7 @@ const SecondStep = ({setData}) => {
         </div>
         {/* Logo */}
       </div>
+    </form>
     </>
   );
 };

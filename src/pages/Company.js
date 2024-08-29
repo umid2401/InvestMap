@@ -153,7 +153,7 @@ const BecomeFundraiser = () => {
                       <>
                         <SecondStep setData={setSecondData} />
                         <div className="text-end toolbar toolbar-bottom p-2">
-						<button
+						            <button
                             className="btn sw-btn-prev sw-btn me-1"
                             onClick={()=>setGoSteps(0)}
                           >

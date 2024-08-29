@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 
-const ThirdStep = ({setData}) => {
+const ThirdStep = ({ setData }) => {
   const initialState = {
     contact_phone_number_1: "",
+    contact_phone_number_2: "",
     accountant_phone_number: "",
+    international_contact_number: "",
     email_address: "",
+    website: "",
     legal_address_of_company: "",
     physical_address_of_company: "",
   };
@@ -19,10 +22,9 @@ const ThirdStep = ({setData}) => {
       [name]: value,
     });
   };
-  useEffect(()=>{
-    setData(formState)
-  }
-  ,[setData,formState])
+  useEffect(() => {
+    setData(formState);
+  }, [setData, formState]);
   return (
     <>
       <div id="wizard_contact" className="tab-pane row" role="tabpanel">
@@ -37,6 +39,20 @@ const ThirdStep = ({setData}) => {
             name="contact_phone_number_1"
             placeholder="Number"
             value={formState.contact_phone_number_1}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="mb-3 col-12 col-md-6">
+          <label htmlFor="contact_phone_number_1" className="form-label">
+            Contact Phone Number 2
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="contact_phone_number_2"
+            name="contact_phone_number_2"
+            placeholder="Number"
+            value={formState.contact_phone_number_2}
             onChange={handleChange}
           />
         </div>
@@ -55,6 +71,20 @@ const ThirdStep = ({setData}) => {
             onChange={handleChange}
           />
         </div>
+        <div className="mb-3 col-12 col-md-6">
+          <label htmlFor="accountant_phone_number" className="form-label">
+            International_contact_number
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="accountant_phone_number"
+            name="international_contact_number"
+            placeholder="Number"
+            value={formState.international_contact_number}
+            onChange={handleChange}
+          />
+        </div>
 
         <div className="mb-3 col-12 col-md-6">
           <label htmlFor="email_address" className="form-label">
@@ -67,6 +97,20 @@ const ThirdStep = ({setData}) => {
             name="email_address"
             placeholder="Enter your email"
             value={formState.email_address}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="mb-3 col-12 col-md-6">
+          <label htmlFor="email_address" className="form-label">
+            Website
+          </label>
+          <input
+            type="url"
+            className="form-control"
+            id="url"
+            name="website"
+            placeholder="Website"
+            value={formState.website}
             onChange={handleChange}
           />
         </div>
