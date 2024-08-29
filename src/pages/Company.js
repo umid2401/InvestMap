@@ -88,10 +88,18 @@ const BecomeFundraiser = () => {
       });
   };
   const sendFinallyData = () =>{
-	axios.post(`${api_url}/api/company/create/final/`)
+	axios.post(`${api_url}/api/company/create/final/`,
+    {
+			headers:{
+				Authorization:`Bearer ${token}`
+			}
+		}
+  )
 	.then(res=>{
-		console.log(res)
-		setModal(false)
+		if(res.status===201){
+      setModal(false)
+      
+    }
 	})
 	.catch(err=>{
 		console.log(err)
@@ -211,7 +219,7 @@ const BecomeFundraiser = () => {
                           </button>
 						  <button
                             className="btn sw-btn-next sw-btn ms-1npm btn-primary py-2"
-                            onClick={sendFinallyData}
+                            onClick={(e)=>formSubmit(e, sendFinallyData)}
                           >
                             Send
                           </button>
