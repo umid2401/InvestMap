@@ -1,27 +1,25 @@
+/* eslint-disable no-sequences */
+/* eslint-disable jsx-a11y/anchor-has-content */
 import React, { useState, useEffect, useReducer, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Dropdown, Form, Modal } from "react-bootstrap";
-import Collapse from "react-bootstrap/Collapse";
 import { MenuListArray2 } from "./Menu";
-
+import { toast } from "react-toastify";
+import Collapse from "react-bootstrap/Collapse";
+import axios from "axios";
 //Logo for Invest
 import logo from "./../assets/images/logo.png";
-import newlogo from "./../assets/images/new_logo.png";
-import axios from "axios";
-import { toast } from "react-toastify";
+import newlogo from "./../assets/images/logo-landing.png";
 // import logo_new1 from "./../assets/images/logo_new1.png";
 const HeaderNew = () => {
-  const [data, setData] = useState();
+  const [name, setName] = useState("");
   const token = localStorage.getItem("access_token");
   //for otp code
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [verification_token, setVerification_token] = useState("");
   const [reset_token, setReset_token] = useState("");
-  //   const invest_token = localStorage.getItem("invest_token")
-  const invest_token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI0ODQxNTg5LCJpYXQiOjE3MjQ3NTUxODksImp0aSI6IjBhODRjM2VlNWYxODQzNzM5YmRjOGExYzhkOTMwYjM4IiwidXNlcl9pZCI6MX0.uwPuSUjr5wObN7eqrzl22-_CVoqorecJcBUO8FRpKIs";
-  const api_url = process.env.REACT_APP_INVEST_MAP_API;
   //API FOR INVESTMAP
+ const api_url = process.env.REACT_APP_INVEST_MAP_API;
   const [role, setRole] = useState("");
   //invest_token
   //react hooks
@@ -34,7 +32,6 @@ const HeaderNew = () => {
   const [updatePasswordModal, setUpdatePasswordModal] = useState(false);
   const [verify, setVerify] = useState(false);
   const [verifyType, setVerifyType] = useState("signup");
-  const [showDropdown, setShowDropdown] = useState(false);
   //Modals end
   //state
   const signUpState = {
@@ -49,6 +46,7 @@ const HeaderNew = () => {
     password: "",
     contact_method: "",
   };
+  //state 
   const signInstate = { identifier: "", password: "" };
   const forgotPasswordState = { new_password: "", confirm_password: "" };
   const sendIdentifier = { identifier: "" };
@@ -73,7 +71,6 @@ const HeaderNew = () => {
     const { name, value } = e.target;
     setIdentifier({ ...identifier, [name]: value });
   };
-
   //Formsubmit
   const formSubmit = (e, customAction) => {
     e.preventDefault();
@@ -89,6 +86,7 @@ const HeaderNew = () => {
           setVerification_token(res?.data?.verification_token);
           setSignupModal(false);
           setVerify(true);
+          setName(sign_up?.first_name);
           setRole(sign_up?.role);
           setSign_up(signUpState);
           setVerifyType("signup");
@@ -162,25 +160,11 @@ const HeaderNew = () => {
         });
       });
   };
+  //logpout function
   const logOut = () => {
     localStorage.removeItem("access_token");
     setloginModal(true);
   };
-  const refreshToken = () => {
-    axios
-      .post(`${api_url}/api/token/refresh/`, {
-        refresh: localStorage.getItem("refresh_token"),
-      })
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-  // useEffect(() => {
-  //   refreshToken();
-  // }, [token]);
   // Sign updam keyin Verify bo'lganda ishlaydigan funksiya
   const newOtp = otp.join("");
   const isVerify = () => {
@@ -195,6 +179,7 @@ const HeaderNew = () => {
       .then((res) => {
         if (res.status === 200) {
           setVerify(false);
+          setloginModal(true);
           setOtp(Array(6).fill(""));
         }
       })
@@ -447,13 +432,6 @@ const HeaderNew = () => {
                     alt="Logo for Invest Hub"
                   />
                 </Link>
-                {/* <Link to={"/"}>
-                  <img
-                    className="w-50"
-                    src={logo_new1}
-                    alt="Logo for Invest Hub"
-                  />
-                </Link> */}
               </div>
               <button
                 className={`navbar-toggler navicon justify-content-end ${
@@ -466,7 +444,7 @@ const HeaderNew = () => {
                 <span></span>
                 <span></span>
               </button>
-              <div className="extra-nav">
+              <div className="extra-nav d-flex gap-2">
                 {token ? (
                   <Dropdown className="extra-cell ">
                     <Dropdown.Toggle
@@ -475,20 +453,21 @@ const HeaderNew = () => {
                       id="dropdown-basic"
                     >
                       <i className="fa-solid fa-user"></i>
-                      <span className="m-l10">My Account</span>
+                      <span className="m-l10">{name}</span>
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
                       <Dropdown.Item onClick={logOut}>
-                        <i class="fas fa-sign-out-alt"></i> Logout
+                        <i className="fas fa-sign-out-alt"></i> Logout
                       </Dropdown.Item>
                       <Dropdown.Item
                         onClick={() => (
+                          // eslint-disable-next-line no-sequences
                           setForgotModal(true), setVerifyType("reset")
                         )}
                       >
                         {" "}
-                        <i class="fas fa-key"></i> Reset Password
+                        <i className="fas fa-key"></i> Reset Password
                       </Dropdown.Item>
                       <Dropdown.Item href="#/action-3">
                         Something else here
@@ -513,9 +492,8 @@ const HeaderNew = () => {
                     </Link>
                   </div>
                 )}
-                <div>
-                </div>
               </div>
+             
               <div
                 className={`header-nav navbar-collapse collapse justify-content-end ${
                   sidebarOpen ? "show" : ""
@@ -731,7 +709,6 @@ const HeaderNew = () => {
               </Link>
             </div>
           </div>
-
           <div className="form-group">
             <button type="submit" className="btn btn-outline-primary btn-block">
               Sign In
@@ -745,7 +722,6 @@ const HeaderNew = () => {
                 className="btn-link collapsed"
                 onClick={() => (setSignupModal(true), setloginModal(false))}
               >
-                {" "}
                 Sign up
               </Link>
             </span>
@@ -1000,16 +976,7 @@ const HeaderNew = () => {
               </div>
             </div>
           </div>
-          {/* <div className="form-group">
-            <span onClick={signUp}>Hello</span>
-            <button
-             
-            2
-              className="btn btn-outline-primary text-white bg-green btn-block"
-            >
-              Sign Up
-            </button>
-          </div> */}
+        
           <button
             type="submit"
             className="btn btn-primary form-control  px-5 mx-auto d-block"

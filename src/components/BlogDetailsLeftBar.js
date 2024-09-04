@@ -127,15 +127,15 @@ const BlogDetailsLeftBar = () => {
                             </div>
                             <form className="comment-form" id="commentform">
                                 <p className="comment-form-author">
-                                    <label for="author">Name <span className="required">*</span></label>
+                                    <label htmlFor="author">Name <span className="required">*</span></label>
                                     <input type="text" name="Author"  placeholder="Author" id="author" />
                                 </p>
                                 <p className="comment-form-email">
-                                    <label for="email">Email <span className="required">*</span></label>
+                                    <label htmlFor="email">Email <span className="required">*</span></label>
                                     <input type="text" placeholder="Email" name="email" id="email" />
                                 </p>
                                 <p className="comment-form-comment">
-                                    <label for="comment">Comment</label>
+                                    <label htmlFor="comment">Comment</label>
                                     <textarea rows="8" name="comment" placeholder="Comment" id="comment"></textarea>
                                 </p>
                                 <p className="form-submit">

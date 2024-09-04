@@ -1,13 +1,12 @@
-import React, { useState, useContext, useEffect } from "react";
+// import React, { useState, useContext, useEffect } from "react";
 //images
-import shape3 from "../assets/images/side-images/shape3.png";
 
 
 //Layouts
 
 //componenet
 import Mainslider2 from "../components/Home2/Mainslider2";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import ServiceBlog from "../components/Home2/ServiceBlog";
 import FaqComponent from "../components/FaqComponent";
 import ContactComponent from "../components/ContactComponent";
@@ -55,7 +54,7 @@ const Home2 = () => {
           className="content-inner"
           style={{ background: "darkturquoise" }}
         >
-          <div class="container">
+          <div className="container">
             <div className="row">
               <div className="col-lg-3 wow fadeInUp" data-wow-delay="0.2s">
                 <div className="section-head">

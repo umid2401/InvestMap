@@ -105,53 +105,53 @@ export const MenuListArray2 = [
         ],
     },
     
-    // {
-    //     title:"Fundraiser",
-    //     classChange:"sub-menu-down",
-    //     content : [
-    //         {
-    //             title:"Browse Fundraiser",
-    //             to:"/browse-fundraiser"
-    //         },
-    //         {
-    //             title:"Become A Fundraiser",
-    //             to:"/become-a-fundraiser"
-    //         },
-    //         {
-    //             title:"Fundraiser Detail",
-    //             to:"/fundraiser-detail"
-    //         },
-    //     ],
-    // },
+    {
+        title:"Fundraiser",
+        classChange:"sub-menu-down",
+        content : [
+            {
+                title:"Browse Fundraiser",
+                to:"/browse-fundraiser"
+            },
+            {
+                title:"Become A Fundraiser",
+                to:"/become-a-fundraiser"
+            },
+            {
+                title:"Fundraiser Detail",
+                to:"/fundraiser-detail"
+            },
+        ],
+    },
     
-    // {
-    //     title:"Blog",
-    //     classChange:"sub-menu-down",
-    //     content:[
-    //         {
-    //             title:"Blog",
-    //             to:"/blog"
-    //         },
-    //         {
-    //             title:"Blog Grid",
-    //             to:"/blog-grid"
-    //         },
-    //         {
-    //             title:"Blog List",
-    //             to:"/blog-list"
-    //         },
-    //         {
-    //             title:"Blog Details",
-    //             to:"/blog-details"
-    //         },
-    //     ],
-    // },
+    {
+        title:"Blog",
+        classChange:"sub-menu-down",
+        content:[
+            {
+                title:"Blog",
+                to:"/blog"
+            },
+            {
+                title:"Blog Grid",
+                to:"/blog-grid"
+            },
+            {
+                title:"Blog List",
+                to:"/blog-list"
+            },
+            {
+                title:"Blog Details",
+                to:"/blog-details"
+            },
+        ],
+    },
     {
         
     },
-    {   
-        title: 'Contact Us',	
-        to: './contact-us',
-    },
+    // {   
+    //     title: 'Contact Us',	
+    //     to: './contact-us',
+    // },
 
 ];

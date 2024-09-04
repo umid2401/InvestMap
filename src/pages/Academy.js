@@ -1,5 +1,5 @@
 import React,{useState} from 'react';
-import {Link, useNavigate} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 // import {Accordion, Modal} from 'react-bootstrap';
 import CountUp from 'react-countup';
 // import ModalVideo from 'react-modal-video'
@@ -27,8 +27,9 @@ const counterBlog = [
 
 const Home3 = () => {    
    
+    // eslint-disable-next-line no-unused-vars
     const [readModal,setReadModal] = useState(false);
-    const [isOpen, setOpen] = useState(false);
+    // const [isOpen, setOpen] = useState(false);
     // const nav = useNavigate();
     // const FormSubmit = (e) => {
     //     e.preventDefault();
@@ -39,9 +40,9 @@ const Home3 = () => {
             <div className="page-wraper page-wraper-sidebar">
                 <div className="page-sidebar">
                     <ul className="dz-social">
-                        <li><a href="https://www.facebook.com/" target={'_blank'}>Facebook</a></li>
-                        <li><a href="https://twitter.com/" target={'_blank'}>Twitter</a></li>
-                        <li><a href="https://www.linkedin.com/" target={'_blank'}>Linkedin</a></li>
+                        <li><a href="https://www.facebook.com/" target={'_blank'} rel="noreferrer">Facebook</a></li>
+                        <li><a href="https://twitter.com/" target={'_blank'} rel="noreferrer">Twitter</a></li>
+                        <li><a href="https://www.linkedin.com/" target={'_blank'} rel="noreferrer">Linkedin</a></li>
                     </ul>
                     <Link to={"#"} className="btn-bottom btn btn-primary light" data-bs-toggle="modal" data-bs-target="#modalDonate">Donate Now</Link>
                 </div>  
@@ -49,19 +50,19 @@ const Home3 = () => {
                     <div className="main-bnr-two">
                         <MainSliderIndex3  />
                     </div>     
-                    <section class="content-inner-1 section-wrapper1">
-                        <div class="container">
-                            <div class="row section-head align-items-center">
-                                <div class="col-lg-8 col-md-12 wow fadeInUp" data-wow-delay="0.2s">
-                                    <h5 class="sub-title">LATEST CAUSES</h5>
+                    <section className="content-inner-1 section-wrapper1">
+                        <div className="container">
+                            <div className="row section-head align-items-center">
+                                <div className="col-lg-8 col-md-12 wow fadeInUp" data-wow-delay="0.2s">
+                                    <h5 className="sub-title">LATEST CAUSES</h5>
                                     <h2>Courses</h2>
                                 </div>
-                                <div class="col-lg-4 col-md-12 text-end d-none d-lg-block wow fadeInUp" data-wow-delay="0.4s">
-                                    <Link to={"/browse-fundraiser"} class="btn btn-primary">View All Causes</Link>
+                                <div className="col-lg-4 col-md-12 text-end d-none d-lg-block wow fadeInUp" data-wow-delay="0.4s">
+                                    <Link to={"/browse-fundraiser"} className="btn btn-primary">View All Causes</Link>
                                 </div>
                             </div>
                         </div>
-                        <div class="resize-wrapper">
+                        <div className="resize-wrapper">
                             <TrendingSlider2 />
                         </div>
                     </section>           

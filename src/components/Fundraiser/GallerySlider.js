@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, {  useState } from "react";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -38,7 +38,7 @@ export default function GallerySlider() {
       >
         {swiperFirst.map((item, index)=>(
             <SwiperSlide key={index}>
-                <div className="dz-media"><img src={item.image} alt="" /></div>
+                <div className="dz-media"><img height="800" src={item.image} alt="" /></div>
             </SwiperSlide>
         ))}
       </Swiper>

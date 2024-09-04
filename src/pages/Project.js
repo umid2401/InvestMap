@@ -1,19 +1,31 @@
-import React,{useState} from 'react';
 import {Link} from 'react-router-dom';
 import {Dropdown} from 'react-bootstrap';
-
-
+import React, {  useState } from "react";
 import ProjectMasonry from '../components/Project/ProjectMasonry';
 import UpdateBlog from '../components/Home/UpdateBlog';
-
-import bg from '../assets/images/banner/bnr5.jpg';
+import axios from 'axios';
 
 const Project = () => {
+    //Api
+    const api_url = process.env.REACT_APP_INVEST_MAP_API;
+    // eslint-disable-next-line no-unused-vars
+    const [data, setdData] = useState();
+    // eslint-disable-next-line no-unused-vars
+    const getAllProjectData = async()=>{
+        try{
+            const res = await axios.get(`${api_url}/api.investmap.uz/api/project/`);
+            if(res.status===200){
+                setdData(res?.data)
+            }
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
     const [dropbtn2,setDropbtn2] = useState('All Category');
     return (
         <>
             <div className="page-content bg-white">
-               
                 <div className="find-bx-wrapper " style={{marginTop:"90px"}}>
                     <div className="container">
                         <div className="find-bx bg-white">

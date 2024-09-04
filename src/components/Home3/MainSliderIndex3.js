@@ -50,7 +50,7 @@ const MainSliderIndex3 = ({onShowDonate}) => {
 							<div className="container-fluid">
 								<div className="row">
 									<div className="col-xl-6 col-md-5">
-										<div class={d.style}>
+										<div className={d.style}>
 											<img src={d.image2} alt="" />
 										</div>
 									</div>

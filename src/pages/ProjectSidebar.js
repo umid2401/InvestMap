@@ -83,31 +83,31 @@ const ProjectSidebar = () => {
                                             <li>
                                                 <div className="form-check custom-checkbox checkbox-secondary">
                                                     <input type="checkbox" className="form-check-input" id="custom1" required />
-                                                    <label className="form-check-label" for="custom1">All Projects</label>
+                                                    <label className="form-check-label" htmlFor="custom1">All Projects</label>
                                                 </div>
                                             </li>
                                             <li>
                                                 <div className="form-check checkbox-secondary m-b5">
                                                     <input type="checkbox" className="form-check-input filled" id="check2" name="example1" />
-                                                    <label className="form-check-label" for="check2">Technology</label>
+                                                    <label className="form-check-label" htmlFor="check2">Technology</label>
                                                 </div>
                                             </li>
                                             <li>
                                                 <div className="form-check checkbox-secondary m-b5">
                                                     <input type="checkbox" className="form-check-input filled" id="check3" name="example1" />
-                                                    <label className="form-check-label" for="check3">Medical</label>
+                                                    <label className="form-check-label" htmlFor="check3">Medical</label>
                                                 </div>
                                             </li>  
                                             <li>
                                                 <div className="form-check checkbox-secondary m-b5">
                                                     <input type="checkbox" className="form-check-input filled" id="check4" name="example1" />
-                                                    <label className="form-check-label" for="check4">Business</label>
+                                                    <label className="form-check-label" htmlFor="check4">Business</label>
                                                 </div>
                                             </li>  
                                             <li>
                                                 <div className="form-check checkbox-secondary m-b5">
                                                     <input type="checkbox" className="form-check-input filled" id="check5" name="example1" />
-                                                    <label className="form-check-label" for="check5">Fashion</label>
+                                                    <label className="form-check-label" htmlFor="check5">Fashion</label>
                                                 </div>
                                             </li> 
                                         </ul>

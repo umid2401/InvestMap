@@ -86,7 +86,7 @@ const BecomeVolunteer = () => {
                                                 <div className="col-md-12 m-b20">
                                                     <div className="form-check">
                                                         <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-                                                        <label className="form-check-label" for="flexCheckDefault">
+                                                        <label className="form-check-label" htmlFor="flexCheckDefault">
                                                             Accept terms & conditions
                                                         </label>
                                                     </div>

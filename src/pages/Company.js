@@ -43,7 +43,7 @@ const BecomeFundraiser = () => {
   };
   const sendFinallyData = () => {
     axios
-      .post(`${api_url}/api/company/create/final/`,{...firstData, ...secondData, ...thirdData} , {
+      .post(`${api_url}/api/company/create/`,{...firstData, ...secondData, ...thirdData} , {
         headers: {
           Authorization: `Bearer ${token}`,
         },

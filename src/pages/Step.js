@@ -6,7 +6,7 @@ export default function Step() {
   return (
     <>
      <section>
-        <div class="container">
+        <div className="container">
         <Tabs
       id="controlled-tab-example"
       activeKey={key}
