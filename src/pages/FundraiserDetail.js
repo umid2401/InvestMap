@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Col, Form, InputGroup, Row, Tab, Table, Tabs } from "react-bootstrap";
 //Images
 import avat1 from "../assets/images/avatar/avatar1.jpg";
@@ -25,16 +25,35 @@ import axios from "axios";
 SwiperCore.use([Navigation, Pagination, Autoplay]);
 Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 const FundraiserDetail = () => {
-  const [selectedOption, setSelectedOption] = useState("charts");
+  const api_url = process.env.REACT_APP_INVEST_MAP_API;
+  const token = localStorage.getItem("access_token");
+  //steplar
+  const [selectedOption, setSelectedOption] = useState("all");
   const [activeSection, setActiveSection] = useState("");
+  const [timelimit, setTimelimit] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [description, setDescription] = useState(null);
+  const [minamount, setMinamount] = useState(null);
+  const [amount, setAmount] = useState(null);
+  const [unique_investors_count, setUnique_investors] = useState(null);
+  const [funding_goal, setFunding_goal] = useState(null);
+  const [progress, setProgress] = useState(null);
+  const [imageData, setImageData] = useState({
+    project_image: null,
+    elevator_pitch_video: null,
+    how_it_works_video: null,
+  });
   // eslint-disable-next-line no-unused-vars
   const [pitchData, setPitchData] = useState(null);
+  const [allTransaction, setAllTransaction] = useState(null);
+  const [meTransaction, setMetransaction] = useState(null);
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
     minutes: 0,
     seconds: 0,
   });
+  const { id } = useParams();
   useEffect(() => {
     // Check if the target date is already stored in localStorage
     let targetDate = localStorage.getItem("targetDate");
@@ -67,108 +86,25 @@ const FundraiserDetail = () => {
 
     return () => clearInterval(interval);
   }, []);
-  // const sections = [
-  //   {
-  //     id: "section1",
-  //     name: "Problem",
-  //     image: "https://via.placeholder.com/100",
-  //     text: "Text 1",
-  //   },
-  //   {
-  //     id: "section2",
-  //     name: "Soluttions",
-  //     image: "https://via.placeholder.com/100",
-  //     text: "Text 2",
-  //   },
-  //   {
-  //     id: "section3",
-  //     name: "Market size",
-  //     image: "https://via.placeholder.com/100",
-  //     text: "Text 3",
-  //   },
-  //   {
-  //     id: "section4",
-  //     name: "Target customer",
-  //     image: "https://via.placeholder.com/100",
-  //     text: "Text 4",
-  //   },
-  //   {
-  //     id: "section5",
-  //     name: "Name 5",
-  //     image: "https://via.placeholder.com/100",
-  //     text: "Text 5",
-  //   },
-  //   {
-  //     id: "section6",
-  //     name: "How it works",
-  //     image: "https://via.placeholder.com/100",
-  //     text: "Text 6",
-  //   },
-  //   {
-  //     id: "section7",
-  //     name: "Special souce",
-  //     image: "https://via.placeholder.com/100",
-  //     text: "Text 7",
-  //   },
-  //   {
-  //     id: "section8",
-  //     name: "Team",
-  //     image: "https://via.placeholder.com/100",
-  //     text: "Text 8",
-  //   },
-  //   {
-  //     id: "section9",
-  //     name: "Why now ",
-  //     image: "https://via.placeholder.com/100",
-  //     text: "Text 9",
-  //   },
-  //   {
-  //     id: "section10",
-  //     name: "Business model ",
-  //     image: "https://via.placeholder.com/100",
-  //     text: "Text 10x",
-  //   },
-  //   {
-  //     id: "section11",
-  //     name: "Competitors ",
-  //     image: "https://via.placeholder.com/100",
-  //     text: "Text 10x",
-  //   },
-  //   {
-  //     id: "section12",
-  //     name: "Tractions ",
-  //     image: "https://via.placeholder.com/100",
-  //     text: "Text 10x",
-  //   },
-  //   {
-  //     id: "section13",
-  //     name: "Financial acqusitions ",
-  //     image: "https://via.placeholder.com/100",
-  //     text: "Text 10x",
-  //   },
-  //   {
-  //     id: "section14",
-  //     name: "Technology ",
-  //     image: "https://via.placeholder.com/100",
-  //     text: "Text 10x",
-  //   },
-  // ];
-  
+
   useEffect(() => {
     const handleScroll = () => {
-      pitchData.forEach(([key]) => {
-        const section = document.getElementById(key);
-        if (section) {
-          const rect = section.getBoundingClientRect();
-          if (rect.top <= window.innerHeight / 2 && rect.bottom >= 0) {
-            setActiveSection(key);
+      if (pitchData && Array.isArray(pitchData)) {
+        pitchData.forEach(([key]) => {
+          const section = document.getElementById(key);
+          if (section) {
+            const rect = section.getBoundingClientRect();
+            if (rect.top <= window.innerHeight / 2 && rect.bottom >= 0) {
+              setActiveSection(key);
+            }
           }
-        }
-      });
+        });
+      } else {
+        console.error("pitchData mavjud emas yoki noto'g'ri formatda.");
+      }
     };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [pitchData]);
   const handleOptionChange = (e) => {
     setSelectedOption(e.target.value);
@@ -185,23 +121,34 @@ const FundraiserDetail = () => {
       },
     ],
   };
-
+  /////////////////////////////////////////////////
   const getPitchData = () => {
     axios
-      .get("http://api.investmap.uz/api/project/visible/",
-        {
-          headers: {
-            'Accept-Language': 'en-US,en;q=0.9', // Til sarlavhasi
-            // Qo'shimcha sarlavhalar qo'shishingiz mumkin
-          }
-        }
-      )
+      .get(`http://api.investmap.uz/api/project/visible/${id}`, {
+        headers: {
+          "Accept-Language": "en-US,en;q=0.9",
+        },
+      })
       .then((res) => {
-        console.log(res.status);
-        if (res.status === 200) {
-          // Sectionsni tekshirib olish
-          const sections = res?.data?.[0]?.pitchdeck_sections?.[0]?.sections;
-          console.log(res.data)
+        if (res.status === 200 && res?.data?.length !== 0) {
+          const sections = res?.data?.pitchdeck_sections?.[0]?.sections;
+          setTimelimit(res?.data?.deadline);
+          setStartDate(res?.data?.start_date);
+          setDescription(res?.data?.project_overview);
+          setAmount(res?.data?.total_invested_amount);
+          setMinamount(res?.data?.min_amount);
+          setProgress(res?.data?.progress_bar);
+          setFunding_goal(res?.data?.funding_goal);
+          setUnique_investors(res?.data?.unique_investors_count);
+          const { project_image, elevator_pitch_video, how_it_works_video } =
+            res?.data;
+          // Ma'lumotlarni state ichiga qo'shamiz
+          setImageData({
+            project_image: project_image || "No Image Available",
+            elevator_pitch_video:
+              elevator_pitch_video || "No Elevator Pitch Video",
+            how_it_works_video: how_it_works_video || "No How It Works Video",
+          });
           if (sections && typeof sections === "object") {
             const resdata = Object.entries(sections);
             setPitchData(resdata);
@@ -214,10 +161,87 @@ const FundraiserDetail = () => {
         console.log(err);
       });
   };
+  ////////////////////////////////////////////////
+  const getAllTransaction = async () => {
+    try {
+      const response = await axios.get(
+        `${api_url}/api/investor/transactions/all/`
+      );
+      const data = response?.data;
+      setAllTransaction(data);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getMeTransaction = async () => {
+    try {
+      const response = await axios.get(
+        `${api_url}/api/investor/transactions/`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = response?.data;
+      setMetransaction(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getAllTransaction();
+    getMeTransaction();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
+  ////////////////////////////////////////////////
+  const formatDate = (dateString) => {
+    if (!dateString) return ""; // Agar dateString bo'sh bo'lsa, bo'sh string qaytaradi
+
+    // Sana formatini to'g'ri qilish
+    let formattedDateString;
+    if (dateString.includes("/")) {
+      // Agar sana / bilan bo'lingan bo'lsa (YYYY/MM/DD), ISO formatga o'zgartiring
+      formattedDateString = dateString.replace(
+        /(\d{4})\/(\d{2})\/(\d{2})/,
+        "$1-$2-$3"
+      );
+    } else {
+      formattedDateString = dateString;
+    }
+
+    const date = new Date(formattedDateString);
+
+    if (isNaN(date.getTime())) {
+      return "Invalid Date";
+    }
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Oyni 2 raqamli formatda olish
+    const day = String(date.getDate()).padStart(2, "0"); // Kunini 2 raqamli formatda olish
+
+    return `${year}/${month}/${day}`;
+  };
+  const formattedDate = formatDate(startDate);
   useEffect(() => {
     getPitchData();
   }, []);
+  if (!allTransaction || allTransaction.length === 0) {
+    return <p>Loading or No data available...</p>;
+  }
+  if (!meTransaction || meTransaction.length === 0) {
+    return <p>Loading or No data available...</p>;
+  }
+  const commonHeight = "2.5rem";
+  const borderStyle = "1px solid #ced4da"; // Border color for the whole group
+  const buttonBackground = "#28a745";
+  const inputBorderRightOnly = '1px 0 0 1px #ced4da';
+  const leftBorderStyle = {
+    borderLeft: '1px 0 0 1px #ced4da',
+    display:"block",
+  };
 
   return (
     <>
@@ -226,14 +250,13 @@ const FundraiserDetail = () => {
         <section className="content-inner-2">
           <div className="container">
             <div className="row d-flex ">
-              <div className="col-xl-8 col-lg-8 m-b30 ">
+              <div className="col-xl-8 col-lg-8 mb-30 ">
                 <div className="">
                   <div className="swiper fundraiser-gallery-wrapper">
-                    <GallerySlider />
+                    <GallerySlider imageData={imageData} />
                   </div>
                 </div>
               </div>
-
               <div className="col-xl-4 col-lg-4">
                 <aside className="side-bar">
                   <div
@@ -244,20 +267,26 @@ const FundraiserDetail = () => {
                     }}
                     className=" style-1 widget_fund"
                   >
-                    <h3 className="title"> {`UZS 45000000`} </h3>
+                    <h3 className="title"> {`UZS ${amount}`} </h3>
                     <p>
-                      raised of <span>uzs 50,00,000</span> goal
+                      raised of <span>uzs {funding_goal}</span> goal
                     </p>
                     <div className="progress-bx style-1">
                       <div className="progress">
                         <div
                           className="progress-bar progress-bar-secondary progress-bar-striped progress-bar-animated"
                           role="progressbar"
-                          style={{ width: "90%" }}
-                        ></div>
+                          style={{ width: `${progress}%` }}
+                        >
+                          {progress}%
+                        </div>
                       </div>
                     </div>
-                    <ul className="detail">
+                    <p className="my-2">
+                      Supporters:{" "}
+                      <span className="mx-2">{unique_investors_count}</span>
+                    </p>
+                    {/* <ul className="detail">
                       <li className="d-flex gap-1 align-align-items-end">
                         <h5 className="m-0 p-0 ">Supporters:</h5>
                         <span>2422</span>
@@ -266,7 +295,14 @@ const FundraiserDetail = () => {
                         <h5 className="m-0 p-0"> Days left:</h5>
                         <span className="ms-2">52</span>
                       </li>
-                    </ul>
+                      <li></li>
+                    </ul> */}
+                    <p className="my-2">
+                      Start Date: <span className="mx-2">{formattedDate}</span>
+                    </p>
+                    <p className="my-2">
+                      Min Amount: <span className="mx-2">{minamount}</span>
+                    </p>
                   </div>
                   <div className="card border-1 rounded-3 py-2  mb-2 mt-3 d-flex ">
                     <div className="d-flex justify-content-center">
@@ -314,110 +350,60 @@ const FundraiserDetail = () => {
 
                   <div className="">
                     <p className="text-left">How much do you hope to invest?</p>
-                    <InputGroup
-                      className="mb-3  py-0"
-                      style={{ fontSize: "0.875rem" }}
+                    <div
+                      className="input-group"
+                      style={{ border: borderStyle, borderRadius: "0.25rem" }}
                     >
-                      <Form.Control
-                        style={{ padding: "0rem 1rem" }}
-                        aria-label="Dollar amount (with dot and two decimal places)"
+                      <input
+                        type="text"
+                        className="form-control border-0"
+                        placeholder="Pul miqdorini kiriting"
+                        style={{ height: commonHeight, borderRadius: '0',  borderRight: inputBorderRightOnly, outline: 'none'  }}
                       />
-                      <InputGroup.Text
-                        style={{
-                          backgroundColor: "whitesmoke",
-                          padding: "0.25rem 0.5rem",
-                        }}
-                      >
-                        $
-                      </InputGroup.Text>
-                      <InputGroup.Text
-                        style={{ backgroundColor: "whitesmoke" }}
-                      >
-                        0.00
-                      </InputGroup.Text>
-                    </InputGroup>
-                    <button
-                      type="button"
-                      className="btn btn-primary  my-0 btn-lg py-2 border-3 w-100 text-center"
-                    >
-                      Pul tikish
-                    </button>
+                      <div className="input-group-prepend border-left-red " style={leftBorderStyle}>
+                        <span
+                          className="input-group-text "
+                          // style={{
+                          //   height: commonHeight,
+                          //   lineHeight: commonHeight,
+                          //   borderRadius: "0",
+                          //   borderRight: inputBorderRightOnly,
+                          // }}
+                          
+                        >
+                          UZS
+                        </span>
+                      </div>
+                      
+                      <div className="input-group-append">
+                        <button
+                          className="btn rounded-0 text-white"
+                          type="button"
+                          style={{
+                            height: commonHeight,
+                            backgroundColor: buttonBackground,
+                            borderColor: buttonBackground,
+                          }}
+                        >
+                          Submit
+                        </button>
+                      </div>
+                    </div>
                   </div>
-
-                  {/* <!-- Fundraiser Post --> */}
-                  {/* <div className="widget style-1 recent-posts-entry">
-                                        <div className="widget-title">
-                                            <h5 className="title">Fundraiser Post</h5>
-                                        </div>	
-                                        <div className="widget-post-bx">
-                                            {postBlog.map((data, ind)=>(
-                                                <div className="widget-post clearfix" key={ind}>
-                                                    <div className="dz-media"> 
-                                                        <img src={data.image} alt="" />
-                                                    </div>
-                                                    <div className="dz-info">
-                                                        <h6 className="title"><Link to={"/blog-details"}>{data.title}</Link></h6>
-                                                        <div className="dz-meta">
-                                                            <ul>
-                                                                <li className="post-date"><i className="flaticon-placeholder"></i> Coimbatore</li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div> */}
-
-                  {/* <!-- Fundraising Team --> */}
-                  {/* <div className="widget style-1 widget_avatar">
-                                        <div className="widget-title">
-                                            <h5 className="title">Fundraising Team</h5>
-                                        </div>
-                                        <div className="avatar-wrapper">
-                                            {teamBlog.map((data, ind)=>(
-                                                <div className="avatar-item" key={ind}>
-                                                    <div className="avatar-media"> 
-                                                        <img src={data.image} alt="" />
-                                                    </div>
-                                                    <div className="avatar-info">
-                                                        <h6 className="title"><Link to={"#"}>{data.title}</Link></h6>
-                                                    </div>
-                                                </div>
-                                            ))}                                            
-                                        </div>
-                                    </div> */}
-
-                  {/* <!-- Top Donors --> */}
-                  {/* <div className="widget style-1 widget_avatar">
-                                        <div className="widget-title">
-                                            <h5 className="title">Top Donors</h5>
-                                        </div>
-                                        <div className="avatar-wrapper">
-                                            {donorsBlog.map((item, ind)=>(
-                                                <div className="avatar-item" key={ind}>
-                                                    <div className="avatar-media"> 
-                                                        <img src={item.image} alt="" />
-                                                    </div>
-                                                    <div className="avatar-info">
-                                                        <h6 className="title"><Link to={"#"}>{item.title}</Link></h6>
-                                                        <span className="donors-item">{item.price}</span>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div> */}
                 </aside>
               </div>
             </div>
             <div className="row my-5 ">
-            
               <Tabs
                 defaultActiveKey="profile"
                 id="justify-tab-example"
                 className="mb-3"
                 justify
               >
-                <Tab eventKey="home" title="Pitchdesk">
+                <Tab eventKey="description" title="Description">
+                  <p>{description}</p>
+                </Tab>
+                <Tab eventKey="home" title="Pitchdeck">
                   <Tab.Container
                     style={{ position: "relative" }}
                     id="left-tabs-example"
@@ -443,76 +429,64 @@ const FundraiserDetail = () => {
                             margin: "0",
                           }}
                         >
-                          {/* {pitchData &&
-                            pitchData.map(([key, value]) => (
-                              <div key={key}>
-                                <h2>{key}</h2>
-                                <p>{value.description}</p>
-                                <img src={value.image} alt={key} />
-                              </div>
-                            ))} */}
-                          {pitchData && pitchData?.map(([key, value]) => (
-                            <li
-                              key={key}
-                              style={{
-                                padding: "10px",
-                                backgroundColor:
-                                  activeSection === key
-                                    ? "#dcdcdc"
-                                    : "transparent",
-                              }}
-                            >
-                             
-                              <Link
-                                to={key}
-                                spy="true"
-                                smooth="true"
-                                duration={500}
-                                offset={-50}
+                          {pitchData &&
+                            pitchData?.map(([key, value]) => (
+                              <li
+                                key={key}
+                                style={{
+                                  padding: "10px",
+                                  backgroundColor:
+                                    activeSection === key
+                                      ? "#dcdcdc"
+                                      : "transparent",
+                                }}
                               >
-                                {value.name}
-                              </Link>
-                            </li>
-                          ))}
+                                <Link
+                                  spy="true"
+                                  smooth="true"
+                                  duration={500}
+                                  offset={-50}
+                                >
+                                  {value.name}
+                                </Link>
+                              </li>
+                            ))}
                         </ul>
                       </nav>
                       <div style={{ marginLeft: "300px", padding: "20px" }}>
-                        {pitchData&&pitchData.map(([key, value]) => (
-                          
-                          <Element
-                            key={key}
-                            name={value.name}
-                            id={key}
-                            className="section"
-                            style={{
-                              padding: "10px 20px",
+                        {pitchData &&
+                          pitchData.map(([key, value]) => (
+                            <Element
+                              key={key}
+                              name={value.name}
+                              id={key}
+                              className="section"
+                              style={{
+                                padding: "10px 20px",
 
-                              marginBottom: "10px",
-                            }}
-                          >
-                            <div className="w-100">
-
-                            <img
-                              src={`http://api.investmap.uz${value.image}`}
-                              alt={value.name}
-                              style={{ width: "100%", height: "300px" }}
-                            />
-                            </div>
-                            <p className="my-3">{value.description}</p>
-                          </Element>
-                        ))}
+                                marginBottom: "10px",
+                              }}
+                            >
+                              <div className="w-100">
+                                <img
+                                  src={`http://api.investmap.uz${value.image}`}
+                                  alt={value.name}
+                                  style={{ width: "100%", height: "300px" }}
+                                />
+                              </div>
+                              <p className="my-3">{value.description}</p>
+                            </Element>
+                          ))}
                       </div>
                     </div>
                   </Tab.Container>
                 </Tab>
-                <Tab eventKey="description" title="Description">
-                  Tab content for Home
-                </Tab>
+
                 <Tab eventKey="profile" title="Transaction">
                   <Form>
                     <Form.Group as={Row} className="d-flex">
                       <Col sm={10} className="d-flex gap-3">
-                        <Form.Check
+                        {/* <Form.Check
                           type="radio"
                           label="Charts"
                           name="radioGroup"
@@ -520,7 +494,7 @@ const FundraiserDetail = () => {
                           id="radio-charts"
                           checked={selectedOption === "charts"}
                           onChange={handleOptionChange}
-                        />
+                        /> */}
                         <Form.Check
                           type="radio"
                           label="All"
@@ -541,10 +515,79 @@ const FundraiserDetail = () => {
                         />
                       </Col>
                     </Form.Group>
-                    {selectedOption === "charts" && (
+                    {selectedOption === "all" && (
                       <div>
-                        <h3>Bar Diagramma</h3>
-                        <Bar data={data} />
+                        <Table responsive>
+                          <thead>
+                            <tr>
+                              {/* Jadval sarlavhalarini dinamik ko'rsatish */}
+                              {allTransaction.length > 0 && (
+                                <>
+                                  {Object.keys(allTransaction[0]).map(
+                                    (key, index) => (
+                                      <th key={index}>{key}</th>
+                                    )
+                                  )}
+                                </>
+                              )}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {allTransaction.map((transaction, index) => (
+                              <tr key={index}>
+                                <td>{transaction?.id}</td>
+                                <td>{formatDate(transaction?.date)}</td>
+                                <td>{transaction?.comment}</td>
+                                <td>
+                                  <img
+                                    style={{ width: "50px", height: "50px" }}
+                                    src={transaction?.invoice_file}
+                                    alt="Not found"
+                                  />
+                                </td>
+                                <td>{transaction?.amount}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </Table>
+                      </div>
+                    )}
+                    {selectedOption === "me" && (
+                      <div>
+                        <p>All transaction</p>
+                        <Table responsive>
+                          <thead>
+                            <tr>
+                              {/* Jadval sarlavhalarini dinamik ko'rsatish */}
+                              {allTransaction.length > 0 && (
+                                <>
+                                  {Object.keys(meTransaction[0]).map(
+                                    (key, index) => (
+                                      <th key={index}>{key}</th>
+                                    )
+                                  )}
+                                </>
+                              )}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {meTransaction.map((transaction, index) => (
+                              <tr key={index}>
+                                <td>{transaction?.id}</td>
+                                <td>{formatDate(transaction?.date)}</td>
+                                <td>{transaction?.comment}</td>
+                                <td>
+                                  <img
+                                    style={{ width: "50px", height: "50px" }}
+                                    src={transaction?.invoice_file}
+                                    alt="Not found"
+                                  />
+                                </td>
+                                <td>{transaction?.amount}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </Table>
                       </div>
                     )}
                   </Form>
@@ -711,7 +754,6 @@ const FundraiserDetail = () => {
             </div>
           </div>
         </section>
-      
       </div>
       {/* <Modal className="modal fade modal-wrapper" id="modalRefer" show={referModal} onHide={setReferModal} centered>               
                 <div className="modal-header">

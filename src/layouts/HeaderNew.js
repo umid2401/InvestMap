@@ -47,6 +47,7 @@ const HeaderNew = () => {
     contact_method: "",
   };
   //state 
+
   const signInstate = { identifier: "", password: "" };
   const forgotPasswordState = { new_password: "", confirm_password: "" };
   const sendIdentifier = { identifier: "" };
@@ -77,7 +78,10 @@ const HeaderNew = () => {
     customAction();
   };
   //sign up bo'lganda ishlaydigan  funksiya
-
+  const flag = JSON.parse(localStorage.getItem('isOpen'));
+  if(flag){
+    
+  }
   const signUp = () => {
     axios
       .post(`${api_url}/user/register/`, sign_up)
@@ -87,6 +91,7 @@ const HeaderNew = () => {
           setSignupModal(false);
           setVerify(true);
           setName(sign_up?.first_name);
+          console.log(name)
           setRole(sign_up?.role);
           setSign_up(signUpState);
           setVerifyType("signup");
@@ -143,7 +148,7 @@ const HeaderNew = () => {
           if (role === "investor") {
             nav("/investor");
           } else {
-            nav("/company");
+            nav("/company")
           }
         }
       })

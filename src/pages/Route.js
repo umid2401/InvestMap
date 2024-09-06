@@ -1,12 +1,10 @@
 import React, { Fragment } from "react";
 import { Route, Routes, Outlet } from "react-router-dom";
-
 import ScrollToTop from "./../layouts/ScrollToTop";
 // import Header from "./../layouts/Header";
 import Footer from "./../layouts/Footer";
 import Home from "./Home";
 import Investing from "./Project";
-
 import AboutUs from "./AboutUs";
 import Volunteer from "./Volunteer";
 import BecomeVolunteer from "./BecomeVolunteer";
@@ -23,7 +21,6 @@ import ComingSoon from "./ComingSoon";
 import BrowseFundraiser from "./Events";
 import BecomeFundraiser from "./Company";
 import FundraiserDetail from "./FundraiserDetail";
-
 import Blog from "./News";
 import BlogGrid from "./BlogGrid";
 import BlogList from "./BlogList";
@@ -35,18 +32,21 @@ import Home2 from "./Raising";
 import Home3 from "./Academy";
 import Resources from "./Resources";
 import Events from "./Events";
-import News from "./News"
-import Company from "./Company"
+import News from "./News";
+import Company from "./Company";
 import HeaderNew from "../layouts/HeaderNew";
+import CreateProject from "./CreateProject";
+import PrivateRoute from "./PrivateRoute";
+
 
 function Index() {
+  
   return (
     <>
       <Routes>
         <Route path="*" exact element={<Error />} />
         <Route path="/under-maintenance" exact element={<UnderMaintenance />} />
         <Route path="/coming-soon" exact element={<ComingSoon />} />
-
         <Route element={<MainLayout />}>
           <Route path="/" exact element={<Home />} />
           <Route path="/about-us" exact element={<AboutUs />} />
@@ -56,6 +56,7 @@ function Index() {
             exact
             element={<BecomeVolunteer />}
           />
+          <Route path="/project" exact element={<CreateProject />} />
           <Route path="/faq" exact element={<Faq />} />
           <Route path="/certificates" exact element={<Certificates />} />
           <Route path="/ask-a-question" exact element={<AskQuestion />} />
@@ -68,24 +69,21 @@ function Index() {
             element={<TermsCondition />}
           />
           <Route path="/events" exact element={<Events />} />
+          <Route path="/company" element={<PrivateRoute element={<Company />} />} />
+
           <Route
-            path="/company"
-            exact
-            element={<Company />}
-          />
-          <Route
-            path="/fundraiser-detail"
+            path="/fundraiser-detail/:id"
             exact
             element={<FundraiserDetail />}
           />
           <Route path="/investing" exact element={<Investing />} />
-
-          <Route path="/news" exact element={<News />} />
+          <Route path="/blog" exact element={<News />} />
+          {/* <Route path="/news" exact element={<News />} /> */}
           <Route path="/blog-grid" exact element={<BlogGrid />} />
           <Route path="/blog-list" exact element={<BlogList />} />
 
           <Route path="/blog-details" exact element={<BlogDetails />} />
-          <Route path="/contact-us" exact element={<ContactUs />} />
+          <Route path="/contact" exact element={<ContactUs />} />
           <Route path="/raising" exact element={<Raising />} />
           <Route path="/academy" exact element={<Academy />} />
           <Route path="/resource" exact element={<Resources />} />
@@ -98,14 +96,11 @@ function Index() {
 
 function MainLayout() {
   return (
-    
-    <div >
-
+    <div>
       <HeaderNew />
       <Outlet />
       <Footer />
     </div>
-
   );
 }
 export default Index;

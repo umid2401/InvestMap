@@ -9,12 +9,16 @@ import ThirdStep from "../components/Fundraiser/ThirdStep";
 // import FourthStep from "../components/Fundraiser/FourthStep";
 
 //images
-import bg from "../assets/images/banner/bnr3.jpg";
+
 import bg2 from "../assets/images/background/bg4.jpg";
 import axios from "axios";
 import { Modal } from "react-bootstrap";
 
+import { useNavigate } from "react-router-dom";
+
 const BecomeFundraiser = () => {
+ 
+  const navigate = useNavigate();
   //api
   const api_url = process.env.REACT_APP_INVEST_MAP_API;
   const token = localStorage.getItem("access_token");
@@ -26,6 +30,7 @@ const BecomeFundraiser = () => {
   const [firstData, setFirstData] = useState({});
   const [secondData, setSecondData] = useState({});
   const [thirdData, setThirdData] = useState({});
+  
   const formSubmit = (e, sendData) => {
     e.preventDefault();
     sendData();
@@ -46,11 +51,18 @@ const BecomeFundraiser = () => {
       .post(`${api_url}/api/company/create/`,{...firstData, ...secondData, ...thirdData} , {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
         },
       })
       .then((res) => {
         if (res.status === 201) {
           setModal(false);
+          localStorage.setItem('isOpen', JSON.stringify(true));
+          navigate("/", { replace: true });
+          // 2. Yangi oyna ochish
+          setTimeout(() => {
+            window.open("https://new-url.com", "_blank");
+          }, 0); 
         }
       })
       .catch((err) => {
@@ -66,6 +78,7 @@ const BecomeFundraiser = () => {
   };
   return (
     <>
+    
       <div className="page-content bg-white">
         <section
           className="content-inner-1 section-pattren1 overlay-white-dark"

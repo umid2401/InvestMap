@@ -28,8 +28,8 @@ import avat8 from "../../assets/images/avatar/avatar8.jpg";
 import avat9 from "../../assets/images/avatar/avatar9.jpg";
 import axios from "axios";
 
-const ProjectMasonry = () => {
-  const [data, setData] = useState(null);
+const ProjectMasonry = ({ childData, notfound }) => {
+  //   const [data, setData] = useState(null);
   const cardData = [
     {
       cardid: "3",
@@ -172,7 +172,7 @@ const ProjectMasonry = () => {
 
   useEffect(() => {
     fetchPopular();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   function fetchPopular() {
     setPopular(cardData);
@@ -188,32 +188,31 @@ const ProjectMasonry = () => {
       card.cardid.includes(activeGenre)
     );
     setFiltered(filtered);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeGenre]);
 
-  const getData = () => {
-    axios
-      .get("http://api.investmap.uz/api/project/visible/")
-      .then((res) => {
-        if (res.status === 200) {
-          const resData = res?.data;
-          setData(resData);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-  useEffect(() => {
-    getData();
-  }, []);
+  //   const getData = () => {
+  //     axios
+  //       .get("http://api.investmap.uz/api/project/visible/")
+  //       .then((res) => {
+  //         if (res.status === 200) {
+  //           const resData = res?.data;
+  //           setData(resData);
+  //         }
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   };
+  //   useEffect(() => {
+  //     getData();
+  //   }, []);
   return (
     <>
-      
-      <div className="row m-b30">
+      <div className="row ">
         <div className="col-xl-10 col-lg-9">
           <div className="site-filters style-1 clearfix">
-            <ul className="filters" data-bs-toggle="buttons">
+            {/* <ul className="filters" data-bs-toggle="buttons">
               <li className={`btn ${activeGenre === 0 ? "active" : ""}`}>
                 <Link to={"#"} onClick={() => setActiveGenre(0)}>
                   All Projects
@@ -251,11 +250,11 @@ const ProjectMasonry = () => {
                   Fashion
                 </Link>
               </li>
-            </ul>
+            </ul> */}
           </div>
         </div>
         <div className="col-xl-2 col-lg-3 text-start text-lg-end m-b20">
-          <Dropdown className="select-drop">
+          {/* <Dropdown className="select-drop">
             <Dropdown.Toggle as="div" className="i-false select-drop-btn">
               <span>{dropbtn}</span>
               <i className="fa-regular fa-angle-down"></i>
@@ -268,7 +267,7 @@ const ProjectMasonry = () => {
                 Oldest
               </Dropdown.Item>
             </Dropdown.Menu>
-          </Dropdown>
+          </Dropdown> */}
         </div>
       </div>
       <div className="clearfix">
@@ -279,8 +278,13 @@ const ProjectMasonry = () => {
           //transition={{ duration: 0.3 }}
         >
           <AnimatePresence>
-            {data &&
-              data.map((item, index) => {
+            {console.log(childData)}
+            {notfound ? (
+              <div className="text-center my-5">Not found</div>
+            ) : (
+              childData &&
+              childData.map((item, index) => {
+                console.log(item);
                 return (
                   <motion.li
                     layout
@@ -292,30 +296,20 @@ const ProjectMasonry = () => {
                     key={index}
                     //transition={{ duration: 0.5 }}
                   >
-                     
-                    <div className="dz-card style-2 ">
+                    <div className="dz-card style-2 overlay-skew ">
                       <div className="dz-media">
-                        <Link to={"/fundraiser-detail"}>
-                          <video
-                           
-                            
-                            controls
-                            style={{
-                              width: "100%",
-                              height: "220px",
-                              border: "1px solid #ddd",
-                              borderRadius: "8px",
-                              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                            }}
-                          >
-                           <source src={`${item.elevator_pitch_video}`} type="video/mp4"/>
-                          </video>
+                        <Link to={`/fundraiser-detail/${item.id}`}>
+                          <img
+                            style={{ height: "240px" }}
+                            src={`${item.project_image}`}
+                            alt="not found"
+                          />
                         </Link>
                       </div>
                       <div className="dz-info">
                         <ul className="dz-category">
                           <li>
-                            <Link to={"#"}>{item.subcategory}</Link>
+                            <Link to={"#"}>{item.sub_category_name}</Link>
                           </li>
                         </ul>
                         <h5 className="dz-title">
@@ -366,7 +360,8 @@ const ProjectMasonry = () => {
                     </div>
                   </motion.li>
                 );
-              })}
+              })
+            )}
           </AnimatePresence>
         </ul>
       </div>

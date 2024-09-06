@@ -85,7 +85,7 @@ const FirstStep = ({setData}) => {
               Date of Registration
             </label>
             <input
-              type="date"
+              type="text"
               className="form-control"
               id="date_of_registration"
               name="date_of_registration"
