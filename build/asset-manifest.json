@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.1c7c99c4.css",
-    "main.js": "/static/js/main.df689bd2.js",
+    "main.js": "/static/js/main.1771dd09.js",
     "static/media/la-brands-400.svg": "/static/media/la-brands-400.928495fae14841a0d610.svg",
     "static/media/la-solid-900.svg": "/static/media/la-solid-900.a813034654b4ff0a0bac.svg",
     "static/media/pic2.png": "/static/media/pic2.486ec4b60a20dd57f044.png",
@@ -17,7 +17,7 @@
     "static/media/la-solid-900.ttf": "/static/media/la-solid-900.279f38601f1d1655255f.ttf",
     "static/media/bg4.jpg": "/static/media/bg4.c3eb4239c8f331d57ba9.jpg",
     "static/media/pic1.png": "/static/media/pic1.ce4ec085685c3bfcae75.png",
-    "static/media/pic1.jpg": "/static/media/pic1.7eea18000a112457db2a.jpg",
+    "static/media/pic1.jpg": "/static/media/pic1.bf52b941827d558545f8.jpg",
     "static/media/pic3.jpg": "/static/media/pic3.5343123447b750a5420c.jpg",
     "static/media/pic5.jpg": "/static/media/pic5.3b841925ad7e07f74a5b.jpg",
     "static/media/slider-bg2.jpg": "/static/media/slider-bg2.7a607585a8e8695a2292.jpg",
@@ -90,10 +90,10 @@
     "static/media/shape-line1.svg": "/static/media/shape-line1.1b59714547229b3b4cea27fc5e893d4a.svg",
     "static/media/shape-line2.svg": "/static/media/shape-line2.0e45a2fff70e4dd4150e1a960cf6dd46.svg",
     "main.1c7c99c4.css.map": "/static/css/main.1c7c99c4.css.map",
-    "main.df689bd2.js.map": "/static/js/main.df689bd2.js.map"
+    "main.1771dd09.js.map": "/static/js/main.1771dd09.js.map"
   },
   "entrypoints": [
     "static/css/main.1c7c99c4.css",
-    "static/js/main.df689bd2.js"
+    "static/js/main.1771dd09.js"
   ]
 }

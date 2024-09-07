@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {Link} from 'react-router-dom';
 
 import PageBanner from './../layouts/PageBanner';
@@ -7,7 +7,6 @@ import PageBanner from './../layouts/PageBanner';
 //images
 import bgImage from './../assets/images/banner/bnr1.jpg';
 import pic1 from './../assets/images/main-slider/slider2/pic1.png';
-import about from './../assets/images/about/pic1.jpg';
 import signature from './../assets/images/about/signature.png';
 import bg4 from './../assets/images/background/bg4.jpg';
 
@@ -20,6 +19,7 @@ import NewsSlider from '../components/Home/NewsSlider';
 import UpdateBlog from '../components/Home/UpdateBlog';
 import OurMission from '../components/OurMission';
 import { IMAGES } from '../constant/theme';
+import axios from 'axios';
 
 const iconBlog = [
     {title:"Trusted Partner"},
@@ -35,6 +35,25 @@ const wrapperBlog = [
 
 
 const AboutUs = () => {
+    const api_url = process.env.REACT_APP_INVEST_MAP_API;
+    const [about, setAbout] = useState(null);
+    const getAbout = async() =>{
+        try {
+            const response = await axios.get(`${api_url}/api/about-us/`);
+            const data = response?.data;
+            setAbout(data);
+            console.log(response?.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    useEffect(()=>{
+        getAbout();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
+    if(!about || about.length===0){
+        return <p>About not found</p>
+    }
     return (
         <>
             <div className="page-content bg-white">

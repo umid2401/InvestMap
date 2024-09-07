@@ -38,6 +38,8 @@ const FundraiserDetail = () => {
   const [unique_investors_count, setUnique_investors] = useState(null);
   const [funding_goal, setFunding_goal] = useState(null);
   const [progress, setProgress] = useState(null);
+  const [investor, setInvestor] = useState(null);
+  const [allData, setAllData] = useState(null);
   const [imageData, setImageData] = useState({
     project_image: null,
     elevator_pitch_video: null,
@@ -131,6 +133,9 @@ const FundraiserDetail = () => {
       })
       .then((res) => {
         if (res.status === 200 && res?.data?.length !== 0) {
+          console.log(res);
+          setAllData(res?.data);
+          setInvestor(res?.data?.investors)
           const sections = res?.data?.pitchdeck_sections?.[0]?.sections;
           setTimelimit(res?.data?.deadline);
           setStartDate(res?.data?.start_date);
@@ -237,17 +242,17 @@ const FundraiserDetail = () => {
   const commonHeight = "2.5rem";
   const borderStyle = "1px solid #ced4da"; // Border color for the whole group
   const buttonBackground = "#28a745";
-  const inputBorderRightOnly = '1px 0 0 1px #ced4da';
+  const inputBorderRightOnly = "1px 0 0 1px #ced4da";
   const leftBorderStyle = {
-    borderLeft: '1px 0 0 1px #ced4da',
-    display:"block",
+    borderLeft: "1px 0 0 1px #ced4da",
+    display: "block",
   };
 
   return (
     <>
       <div className="page-content bg-white">
         {/* <PageBanner maintitle="Fundraiser" pagetitle="Fundraiser Detail" background={bg}/> */}
-        <section className="content-inner-2">
+        <section className="n">
           <div className="container">
             <div className="row d-flex ">
               <div className="col-xl-8 col-lg-8 mb-30 ">
@@ -358,9 +363,17 @@ const FundraiserDetail = () => {
                         type="text"
                         className="form-control border-0"
                         placeholder="Pul miqdorini kiriting"
-                        style={{ height: commonHeight, borderRadius: '0',  borderRight: inputBorderRightOnly, outline: 'none'  }}
+                        style={{
+                          height: commonHeight,
+                          borderRadius: "0",
+                          borderRight: inputBorderRightOnly,
+                          outline: "none",
+                        }}
                       />
-                      <div className="input-group-prepend border-left-red " style={leftBorderStyle}>
+                      <div
+                        className="input-group-prepend border-left-red "
+                        style={leftBorderStyle}
+                      >
                         <span
                           className="input-group-text "
                           // style={{
@@ -369,12 +382,11 @@ const FundraiserDetail = () => {
                           //   borderRadius: "0",
                           //   borderRight: inputBorderRightOnly,
                           // }}
-                          
                         >
                           UZS
                         </span>
                       </div>
-                      
+
                       <div className="input-group-append">
                         <button
                           className="btn rounded-0 text-white"
@@ -539,11 +551,15 @@ const FundraiserDetail = () => {
                                 <td>{formatDate(transaction?.date)}</td>
                                 <td>{transaction?.comment}</td>
                                 <td>
-                                  <img
+                                  <a href={transaction?.invoice_file} className="download-link" target="blank">
+                                    <i className="fa fa-download"></i> Download
+                                    File
+                                  </a>
+                                  {/* <img
                                     style={{ width: "50px", height: "50px" }}
                                     src={transaction?.invoice_file}
                                     alt="Not found"
-                                  />
+                                  /> */}
                                 </td>
                                 <td>{transaction?.amount}</td>
                               </tr>
@@ -577,11 +593,10 @@ const FundraiserDetail = () => {
                                 <td>{formatDate(transaction?.date)}</td>
                                 <td>{transaction?.comment}</td>
                                 <td>
-                                  <img
-                                    style={{ width: "50px", height: "50px" }}
-                                    src={transaction?.invoice_file}
-                                    alt="Not found"
-                                  />
+                                <a href={transaction?.invoice_file} className="download-link" target="blank">
+                                    <i className="fa fa-download"></i> Download
+                                    File
+                                  </a>
                                 </td>
                                 <td>{transaction?.amount}</td>
                               </tr>
@@ -684,72 +699,102 @@ const FundraiserDetail = () => {
                   </div>
                 </Tab>
                 <Tab eventKey="investor" title="Investor">
-                  <Table responsive>
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        {Array.from({ length: 4 }).map((_, index) => (
-                          <th key={index}>Table heading</th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>1</td>
-                        {Array.from({ length: 4 }).map((_, index) => (
-                          <td key={index}>Table cell {index}</td>
-                        ))}
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        {Array.from({ length: 4 }).map((_, index) => (
-                          <td key={index}>Table cell {index}</td>
-                        ))}
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        {Array.from({ length: 4 }).map((_, index) => (
-                          <td key={index}>Table cell {index}</td>
-                        ))}
-                      </tr>
-                    </tbody>
-                  </Table>
+                <Table responsive>
+                          <thead>
+                            <tr>
+                              <th>Id</th>
+                              <th>Email</th>
+                              <th>Firstname</th>
+                              <th>Lastname</th>
+                              
+                              <th>Phone Number</th>
+                              {/* {allTransaction.length > 0 && (
+                                <>
+                                  {Object.keys(allTransaction[0]).map(
+                                    (key, index) => (
+                                      <th key={index}>{key}</th>
+                                    )
+                                  )}
+                                </>
+                              )} */}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {investor&&investor.map((transaction, index) => (
+                              <tr key={index}>
+                                <td>{transaction?.id}</td>
+                                <td>{transaction?.user?.email}</td>
+                                <td>{transaction?.user?.first_name}</td>
+                                <td>{transaction?.user?.last_name}</td> 
+                                <td>{transaction?.user?.phone_number}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </Table>
                 </Tab>
                 <Tab eventKey="documents" title="Documents">
-                  <Table responsive>
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        {Array.from({ length: 4 }).map((_, index) => (
-                          <th key={index}>Table heading</th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>1</td>
-                        {Array.from({ length: 4 }).map((_, index) => (
-                          <td key={index}>Table cell {index}</td>
-                        ))}
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        {Array.from({ length: 4 }).map((_, index) => (
-                          <td key={index}>Table cell {index}</td>
-                        ))}
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        {Array.from({ length: 4 }).map((_, index) => (
-                          <td key={index}>Table cell {index}</td>
-                        ))}
-                      </tr>
-                    </tbody>
-                  </Table>
+                <Table responsive>
+                          <thead>
+                            <tr>
+                              <th>Id</th>
+                              <th>Filename</th>
+                              <th>Source</th>
+                              {/* Jadval sarlavhalarini dinamik ko'rsatish */}
+                              {/* {allTransaction.length > 0 && (
+                                <>
+                                  {Object.keys(meTransaction[0]).map(
+                                    (key, index) => (
+                                      <th key={index}>{key}</th>
+                                    )
+                                  )}
+                                </>
+                              )} */}
+                            </tr>
+                          </thead>
+                          <tbody>
+                          
+                            <tr>
+                              <td>1</td>
+                              <td>Business Plan</td>
+                              <td>
+                              <a href={allData?.business_plan} className="download-link" target="blank">
+                                    <i className="fa fa-download"></i> Download
+                                    File
+                                  </a>
+                              </td>
+                             
+                            </tr>
+                            <tr>
+                              <td>2</td>
+                              <td>Financial Statements</td>
+                              <td>
+                              <a href={allData?.financial_statements} className="download-link" target="blank">
+                                    <i className="fa fa-download"></i> Download
+                                    File
+                                  </a>
+                              </td>
+                             
+                            </tr>
+                            {/* {meTransaction.map((transaction, index) => (
+                              <tr key={index}>
+                                <td>{transaction?.id}</td>
+                                <td>{formatDate(transaction?.date)}</td>
+                                <td>{transaction?.comment}</td>
+                                <td>
+                                <a href={transaction?.invoice_file} className="download-link" target="blank">
+                                    <i className="fa fa-download"></i> Download
+                                    File
+                                  </a>
+                                </td>
+                                <td>{transaction?.amount}</td>
+                              </tr>
+                            ))} */}
+                          </tbody>
+                        </Table>
                 </Tab>
-                <Tab eventKey="updates" title="Updates">
+                {/* <Tab eventKey="updates" title="Updates">
                   Tab content for Home
-                </Tab>
+                </Tab> */}
               </Tabs>
             </div>
           </div>

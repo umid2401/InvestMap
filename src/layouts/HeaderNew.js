@@ -87,6 +87,7 @@ const HeaderNew = () => {
       .post(`${api_url}/user/register/`, sign_up)
       .then((res) => {
         if (res.status === 201) {
+          localStorage.setItem('isOpen', JSON.stringify(false));
           setVerification_token(res?.data?.verification_token);
           setSignupModal(false);
           setVerify(true);
