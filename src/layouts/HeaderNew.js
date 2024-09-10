@@ -422,6 +422,7 @@ const HeaderNew = () => {
   const [active, setActive] = useState(false);
   const [too, setToo] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("Eng");
+  const lang= localStorage.getItem("langs");
   const [language, setLanguage] = useState("en");
   const toggle = (e) => {
     setToo(!too);
@@ -612,7 +613,7 @@ const HeaderNew = () => {
                     onClick={toggle}
                   >
                     <i className="fa fa-globe me-2"></i>{" "}
-                    {localStorage.getItem("langs").toUpperCase()}
+                    {lang?.toUpperCase()}
                   </button>
 
                   {/* Custom Dropdown Menu */}
