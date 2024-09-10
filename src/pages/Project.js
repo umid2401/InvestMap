@@ -218,15 +218,10 @@ const Project = () => {
           </div>
         </div>
         <section className="">
-          <div className="container">
+          <div className="container mb-5">
             <ProjectMasonry childData={childData} notfound={notfound} />
           </div>
         </section>
-        <div className="call-action style-1 content-inner-1">
-          <div className="container">
-            <UpdateBlog />
-          </div>
-        </div>
       </div>
     </>
   );

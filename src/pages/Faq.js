@@ -56,7 +56,7 @@ const Faq = () => {
   return (
     <>
       <div className="page-content bg-white">
-        <PageBanner maintitle="Home" pagetitle="Faq" background={bgImage} />
+       
         <section className="content-inner">
           <div className="container">
             <div className="row align-items-center flex-column-reverse flex-lg-row">
@@ -176,11 +176,7 @@ const Faq = () => {
                         </div>
                     </div>
                 </section> */}
-        <div className="call-action style-1 content-inner-1">
-          <div className="container">
-            <UpdateBlog />
-          </div>
-        </div>
+      
       </div>
     </>
   );

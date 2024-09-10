@@ -1,8 +1,10 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable no-sequences */
 /* eslint-disable jsx-a11y/anchor-has-content */
 import React, { useState, useEffect, useReducer, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, Dropdown, Form, Modal } from "react-bootstrap";
+import { Button, Dropdown, DropdownButton, Form, Modal } from "react-bootstrap";
 import { MenuListArray2 } from "./Menu";
 import { toast } from "react-toastify";
 import Collapse from "react-bootstrap/Collapse";
@@ -10,6 +12,7 @@ import axios from "axios";
 //Logo for Invest
 import logo from "./../assets/images/logo.png";
 import newlogo from "./../assets/images/logo-landing.png";
+import "..//assets//vendor/bootstrap/css/bootstrap.min.css";
 // import logo_new1 from "./../assets/images/logo_new1.png";
 const HeaderNew = () => {
   const [name, setName] = useState("");
@@ -19,7 +22,7 @@ const HeaderNew = () => {
   const [verification_token, setVerification_token] = useState("");
   const [reset_token, setReset_token] = useState("");
   //API FOR INVESTMAP
- const api_url = process.env.REACT_APP_INVEST_MAP_API;
+  const api_url = process.env.REACT_APP_INVEST_MAP_API;
   const [role, setRole] = useState("");
   //invest_token
   //react hooks
@@ -46,8 +49,7 @@ const HeaderNew = () => {
     password: "",
     contact_method: "",
   };
-  //state 
-
+  //state
   const signInstate = { identifier: "", password: "" };
   const forgotPasswordState = { new_password: "", confirm_password: "" };
   const sendIdentifier = { identifier: "" };
@@ -78,21 +80,20 @@ const HeaderNew = () => {
     customAction();
   };
   //sign up bo'lganda ishlaydigan  funksiya
-  const flag = JSON.parse(localStorage.getItem('isOpen'));
-  if(flag){
-    
+  const flag = JSON.parse(localStorage.getItem("isOpen"));
+  if (flag) {
   }
   const signUp = () => {
     axios
       .post(`${api_url}/user/register/`, sign_up)
       .then((res) => {
         if (res.status === 201) {
-          localStorage.setItem('isOpen', JSON.stringify(false));
+          localStorage.setItem("isOpen", JSON.stringify(false));
           setVerification_token(res?.data?.verification_token);
           setSignupModal(false);
           setVerify(true);
           setName(sign_up?.first_name);
-          console.log(name)
+          console.log(name);
           setRole(sign_up?.role);
           setSign_up(signUpState);
           setVerifyType("signup");
@@ -149,7 +150,7 @@ const HeaderNew = () => {
           if (role === "investor") {
             nav("/investor");
           } else {
-            nav("/company")
+            nav("/company");
           }
         }
       })
@@ -170,6 +171,7 @@ const HeaderNew = () => {
   const logOut = () => {
     localStorage.removeItem("access_token");
     setloginModal(true);
+    setActive(false);
   };
   // Sign updam keyin Verify bo'lganda ishlaydigan funksiya
   const newOtp = otp.join("");
@@ -417,9 +419,55 @@ const HeaderNew = () => {
       setState({ activeSubmenu: "" });
     }
   };
+  const [active, setActive] = useState(false);
+  const [too, setToo] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState("Eng");
+  const [language, setLanguage] = useState("en");
+  const toggle = (e) => {
+    setToo(!too);
+    setActive(false);
+  };
+  const firstDropdownRef = useRef(null);
+  const secondDropdownRef = useRef(null);
+  const button1Ref = useRef(null);
+  const button2Ref = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // First dropdown tashqarisidagi kliklarni aniqlash
+      if (
+        firstDropdownRef.current &&
+        !firstDropdownRef.current.contains(event.target) &&
+        !button1Ref.current.contains(event.target)
+      ) {
+        setToo(false);
+      }
 
-  //let path = window.location.pathname;
-  // Menu dropdown list End
+      // Second dropdown tashqarisidagi kliklarni aniqlash
+      if (
+        secondDropdownRef.current &&
+        !secondDropdownRef.current.contains(event.target) &&
+        !button2Ref.current.contains(event.target)
+      ) {
+        setActive(false);
+      }
+    };
+
+    // Event listener qo'shamiz
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Event listenerni tozalaymiz
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [active, too]);
+
+  // Handle language selection
+  const handleLanguageChange = (language, displayName) => {
+    setSelectedLanguage(displayName);
+    setLanguage(language);
+    setToo(false); // Close dropdown after selection
+    localStorage.setItem("langs", language);
+  };
   return (
     <>
       <header className="site-header mo-left header style-1">
@@ -450,36 +498,52 @@ const HeaderNew = () => {
                 <span></span>
                 <span></span>
               </button>
-              <div className="extra-nav d-flex gap-2">
+              <div className="extra-nav d-flex gap-3">
                 {token ? (
-                  <Dropdown className="extra-cell ">
-                    <Dropdown.Toggle
-                      className="btn btn-primary text-white py-2 px-3"
-                      variant="success"
-                      id="dropdown-basic"
+                  <div class="extra-cell position-relative ">
+                    <button
+                      class="btn py-2 px-3 btn-outline-secondary btnhover1"
+                      ref={button2Ref}
+                      onClick={() => setActive(!active)}
                     >
-                      <i className="fa-solid fa-user"></i>
-                      <span className="m-l10">{name}</span>
-                    </Dropdown.Toggle>
-
-                    <Dropdown.Menu>
-                      <Dropdown.Item onClick={logOut}>
-                        <i className="fas fa-sign-out-alt"></i> Logout
-                      </Dropdown.Item>
-                      <Dropdown.Item
+                      <i class="fa-solid fa-user"></i>
+                      <span class="m-l10">My Account</span>
+                    </button>
+                    <div
+                      ref={secondDropdownRef}
+                      style={{
+                        cursor: "pointer",
+                        backgroundColor: "white",
+                        padding: "10px 0px 20px 15px",
+                        width: "180px",
+                        borderRadius: "5px",
+                      }}
+                      className={`position-absolute   gap-1 ${
+                        active ? "d-grid" : "d-none"
+                      }`}
+                    >
+                      <div onClick={logOut}>
+                        <i className="fas fa-sign-out-alt"></i>
+                        <span> Logout</span>
+                      </div>
+                      <div
+                        style={{ cursor: "pointer" }}
                         onClick={() => (
                           // eslint-disable-next-line no-sequences
-                          setForgotModal(true), setVerifyType("reset")
+                          setForgotModal(true),
+                          setVerifyType("reset"),
+                          setActive(false)
                         )}
                       >
-                        {" "}
-                        <i className="fas fa-key"></i> Reset Password
-                      </Dropdown.Item>
-                      <Dropdown.Item href="#/action-3">
-                        Something else here
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
+                        <i className="fas fa-key"></i>
+                        <span> Reset Password</span>
+                      </div>
+                      <div style={{ cursor: "pointer" }} className="">
+                        <i className="fas fa-sign-out-alt"></i>
+                        <span> Logout</span>
+                      </div>
+                    </div>
+                  </div>
                 ) : (
                   <div className="text-info">
                     <Link
@@ -498,8 +562,94 @@ const HeaderNew = () => {
                     </Link>
                   </div>
                 )}
+                {/* <div className="dropdown text-end">
+                  <button
+                    className="btn px-2 py-2 btn-secondary dropdown-toggle"
+                    type="button"
+                    id="languageDropdown"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <i className="fa fa-globe me-2"></i> Eng
+                  </button>
+                  <ul
+                    className="dropdown-menu"
+                    aria-labelledby="languageDropdown"
+                  >
+                    <li>
+                      <a className="dropdown-item" href="#">
+                        <i className="flag-icon flag-icon-us me-2"></i> English
+                      </a>
+                    </li>
+                    <li>
+                      <a className="dropdown-item" href="#">
+                        <i className="flag-icon flag-icon-fr me-2"></i> Français
+                      </a>
+                    </li>
+                    <li>
+                      <a className="dropdown-item" href="#">
+                        <i className="flag-icon flag-icon-de me-2"></i> Deutsch
+                      </a>
+                    </li>
+                    <li>
+                      <a className="dropdown-item" href="#">
+                        <i className="flag-icon flag-icon-es me-2"></i> Español
+                      </a>
+                    </li>
+                    <li>
+                      <a className="dropdown-item" href="#">
+                        <i className="flag-icon flag-icon-ru me-2"></i> Русский
+                      </a>
+                    </li>
+                  </ul>
+                </div> */}
+                <div className="dropdown position-relative">
+                  {/* Dropdown Toggle Button */}
+                  <button
+                    ref={button1Ref}
+                    className="btn px-2 py-2 btn-secondary"
+                    type="button"
+                    onClick={toggle}
+                  >
+                    <i className="fa fa-globe me-2"></i>{" "}
+                    {localStorage.getItem("langs").toLocaleUpperCase()}
+                  </button>
+
+                  {/* Custom Dropdown Menu */}
+                  {too && (
+                    <ul
+                      ref={firstDropdownRef}
+                      className="bg-light position-absolute start-0 mt-2 w-100"
+                    >
+                      <li>
+                        <button
+                          className="dropdown-item d-flex align-items-center w-100"
+                          onClick={() => handleLanguageChange("en", "Enwwww")}
+                        >
+                          <i className="flag-icon flag-icon-us me-2"></i> EN
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          className="dropdown-item d-flex align-items-center"
+                          onClick={() => handleLanguageChange("uz", "Uz")}
+                        >
+                          <i className="flag-icon flag-icon-fr me-2"></i> UZ
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          className="dropdown-item d-flex align-items-center"
+                          onClick={() => handleLanguageChange("ru", "Ru")}
+                        >
+                          <i className="flag-icon flag-icon-de me-2"></i> RU
+                        </button>
+                      </li>
+                    </ul>
+                  )}
+                </div>
               </div>
-             
+
               <div
                 className={`header-nav navbar-collapse collapse justify-content-end ${
                   sidebarOpen ? "show" : ""
@@ -982,7 +1132,7 @@ const HeaderNew = () => {
               </div>
             </div>
           </div>
-        
+
           <button
             type="submit"
             className="btn btn-primary form-control  px-5 mx-auto d-block"
@@ -1033,20 +1183,24 @@ const HeaderNew = () => {
             </div>
           </Form>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className=" d-flex justify-content-center">
           {verifyType === "forgot" && (
             <Button className="py-2" variant="secondary" onClick={sendCode}>
-              Verify Otp Forgot
+              Verify Otp
             </Button>
           )}
           {verifyType === "signup" && (
-            <Button className="py-2" onClick={isVerify} variant="primary">
-              Verify OTP Signup
+            <Button
+              className="py-2 text-center"
+              onClick={isVerify}
+              variant="primary"
+            >
+              Verify OTP
             </Button>
           )}
           {verifyType === "reset" && (
             <Button className="py-2" onClick={sendCode} variant="primary">
-              Verify Otp Reset
+              Verify Otp
             </Button>
           )}
         </Modal.Footer>

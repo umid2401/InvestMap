@@ -26,7 +26,7 @@ const Footer = () => {
                 <div className="footer-bottom">
                     <div className="container">
                         <div className="text-center"> 
-                            <span className="copyright-text">Copyright © 2023 <a href="https://dexignzone.com/" target="_blank"  rel="noreferrer">DexignZone</a>. All rights reserved.</span> 
+                            <span className="copyright-text">Copyright © 2024 <a href="https://greatsoft.uz" target="_blank"  rel="noreferrer">Greatsoft</a>. All rights reserved.</span> 
                         </div>
                     </div>
                 </div>

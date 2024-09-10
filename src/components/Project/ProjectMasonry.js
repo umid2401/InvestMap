@@ -296,7 +296,7 @@ const ProjectMasonry = ({ childData, notfound }) => {
                     key={index}
                     //transition={{ duration: 0.5 }}
                   >
-                    <div className="dz-card style-2 overlay-skew ">
+                    <div className="dz-card style-2  ">
                       <div className="dz-media">
                         <Link to={`/fundraiser-detail/${item.id}`}>
                           <img

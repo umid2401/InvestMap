@@ -1,6 +1,18 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Col, Form, InputGroup, Row, Tab, Table, Tabs } from "react-bootstrap";
+import {
+  Button,
+  Card,
+  Col,
+  Form,
+  InputGroup,
+  Modal,
+  Row,
+  Tab,
+  Table,
+  Tabs,
+} from "react-bootstrap";
 //Images
 import avat1 from "../assets/images/avatar/avatar1.jpg";
 import avat2 from "../assets/images/avatar/avatar2.jpg";
@@ -40,6 +52,10 @@ const FundraiserDetail = () => {
   const [progress, setProgress] = useState(null);
   const [investor, setInvestor] = useState(null);
   const [allData, setAllData] = useState(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [verify, setVerify] = useState(false)
+  const [money, setMoney] = useState({ money: "" });
+  const [isCardModalVisible, setIsCardModalVisible] = useState(false);
   const [imageData, setImageData] = useState({
     project_image: null,
     elevator_pitch_video: null,
@@ -55,21 +71,26 @@ const FundraiserDetail = () => {
     minutes: 0,
     seconds: 0,
   });
+  //payment datas
+  const [cards, setCards] = useState([
+    { id: 1, number: "**** **** **** 1234", expiry: "12/24" },
+    { id: 2, number: "**** **** **** 5678", expiry: "11/25" },
+  ]);
+  const [selectedCard, setSelectedCard] = useState(null);
+  const [newCardNumber, setNewCardNumber] = useState("");
+  const [newCardExpiry, setNewCardExpiry] = useState("");
   const { id } = useParams();
   useEffect(() => {
     // Check if the target date is already stored in localStorage
     let targetDate = localStorage.getItem("targetDate");
-
     if (!targetDate) {
       // If no target date is stored, save the current deadline (12th September)
       targetDate = new Date("2024-09-12T00:00:00").toString();
       localStorage.setItem("targetDate", targetDate);
     }
-
     const interval = setInterval(() => {
       const now = new Date();
       const difference = new Date(targetDate) - now;
-
       if (difference > 0) {
         const days = Math.floor(difference / (1000 * 60 * 60 * 24));
         const hours = Math.floor(
@@ -85,7 +106,6 @@ const FundraiserDetail = () => {
         clearInterval(interval);
       }
     }, 1000);
-
     return () => clearInterval(interval);
   }, []);
 
@@ -124,47 +144,93 @@ const FundraiserDetail = () => {
     ],
   };
   /////////////////////////////////////////////////
-  const getPitchData = () => {
-    axios
-      .get(`http://api.investmap.uz/api/project/visible/${id}`, {
-        headers: {
-          "Accept-Language": "en-US,en;q=0.9",
-        },
-      })
-      .then((res) => {
-        if (res.status === 200 && res?.data?.length !== 0) {
-          console.log(res);
-          setAllData(res?.data);
-          setInvestor(res?.data?.investors)
-          const sections = res?.data?.pitchdeck_sections?.[0]?.sections;
-          setTimelimit(res?.data?.deadline);
-          setStartDate(res?.data?.start_date);
-          setDescription(res?.data?.project_overview);
-          setAmount(res?.data?.total_invested_amount);
-          setMinamount(res?.data?.min_amount);
-          setProgress(res?.data?.progress_bar);
-          setFunding_goal(res?.data?.funding_goal);
-          setUnique_investors(res?.data?.unique_investors_count);
-          const { project_image, elevator_pitch_video, how_it_works_video } =
-            res?.data;
-          // Ma'lumotlarni state ichiga qo'shamiz
-          setImageData({
-            project_image: project_image || "No Image Available",
-            elevator_pitch_video:
-              elevator_pitch_video || "No Elevator Pitch Video",
-            how_it_works_video: how_it_works_video || "No How It Works Video",
-          });
-          if (sections && typeof sections === "object") {
-            const resdata = Object.entries(sections);
-            setPitchData(resdata);
-          } else {
-            console.error("Sections undefined yoki null qiymatga ega.");
-          }
+  const getStoredLanguage = () => {
+    const storedLanguage = localStorage.getItem("langs");
+    return storedLanguage ? storedLanguage : "en";
+  };
+
+  const getPitchData = async () => {
+    try {
+      const res = await axios.get(
+        `http://api.investmap.uz/api/project/visible/${id}`,
+        {
+          headers: {
+            "Accept-Language": getStoredLanguage(),
+          },
         }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      );
+      if (res.status === 200 && res?.data?.length !== 0) {
+        console.log(res);
+        setAllData(res?.data);
+        setInvestor(res?.data?.investors);
+        const sections = res?.data?.pitchdeck_sections?.[0]?.sections;
+        setTimelimit(res?.data?.deadline);
+        setStartDate(res?.data?.start_date);
+        setDescription(res?.data?.project_overview);
+        setAmount(res?.data?.total_invested_amount);
+        setMinamount(res?.data?.min_amount);
+        setProgress(res?.data?.progress_bar);
+        setFunding_goal(res?.data?.funding_goal);
+        setUnique_investors(res?.data?.unique_investors_count);
+        const { project_image, elevator_pitch_video, how_it_works_video } =
+          res?.data;
+        // Ma'lumotlarni state ichiga qo'shamiz
+        setImageData({
+          project_image: project_image || "No Image Available",
+          elevator_pitch_video:
+            elevator_pitch_video || "No Elevator Pitch Video",
+          how_it_works_video: how_it_works_video || "No How It Works Video",
+        });
+        if (sections && typeof sections === "object") {
+          const resdata = Object.entries(sections);
+          setPitchData(resdata);
+        } else {
+          console.error("Sections undefined yoki null qiymatga ega.");
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    // axios
+    //   .get(`http://api.investmap.uz/api/project/visible/${id}`, {
+    //     headers: {
+    //       "Accept-Language": getStoredLanguage(),
+    //     },
+    //   })
+    //   .then((res) => {
+    //     if (res.status === 200 && res?.data?.length !== 0) {
+    //       console.log(res);
+    //       setAllData(res?.data);
+    //       setInvestor(res?.data?.investors)
+    //       const sections = res?.data?.pitchdeck_sections?.[0]?.sections;
+    //       setTimelimit(res?.data?.deadline);
+    //       setStartDate(res?.data?.start_date);
+    //       setDescription(res?.data?.project_overview);
+    //       setAmount(res?.data?.total_invested_amount);
+    //       setMinamount(res?.data?.min_amount);
+    //       setProgress(res?.data?.progress_bar);
+    //       setFunding_goal(res?.data?.funding_goal);
+    //       setUnique_investors(res?.data?.unique_investors_count);
+    //       const { project_image, elevator_pitch_video, how_it_works_video } =
+    //         res?.data;
+    //       // Ma'lumotlarni state ichiga qo'shamiz
+    //       setImageData({
+    //         project_image: project_image || "No Image Available",
+    //         elevator_pitch_video:
+    //           elevator_pitch_video || "No Elevator Pitch Video",
+    //         how_it_works_video: how_it_works_video || "No How It Works Video",
+    //       });
+    //       if (sections && typeof sections === "object") {
+    //         const resdata = Object.entries(sections);
+    //         setPitchData(resdata);
+    //       } else {
+    //         console.error("Sections undefined yoki null qiymatga ega.");
+    //       }
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   };
   ////////////////////////////////////////////////
   const getAllTransaction = async () => {
@@ -195,11 +261,15 @@ const FundraiserDetail = () => {
       console.log(error);
     }
   };
+  const [selectedLanguage, setSelectedLanguage] = useState(() => {
+    // Sahifa yuklanganda saqlangan tilni olish
+    return localStorage.getItem("langs") || "en"; // Default tilni qaytarish
+  });
   useEffect(() => {
     getAllTransaction();
     getMeTransaction();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [selectedLanguage]);
 
   ////////////////////////////////////////////////
   const formatDate = (dateString) => {
@@ -230,15 +300,9 @@ const FundraiserDetail = () => {
     return `${year}/${month}/${day}`;
   };
   const formattedDate = formatDate(startDate);
-  useEffect(() => {
-    getPitchData();
-  }, []);
-  if (!allTransaction || allTransaction.length === 0) {
-    return <p>Loading or No data available...</p>;
-  }
-  if (!meTransaction || meTransaction.length === 0) {
-    return <p>Loading or No data available...</p>;
-  }
+
+  //Modallar
+
   const commonHeight = "2.5rem";
   const borderStyle = "1px solid #ced4da"; // Border color for the whole group
   const buttonBackground = "#28a745";
@@ -247,7 +311,137 @@ const FundraiserDetail = () => {
     borderLeft: "1px 0 0 1px #ced4da",
     display: "block",
   };
+  //payment
+  const handleMainModalClose = () => setIsVisible(false);
+  const handleMainModalShow = () => setIsVisible(true);
+  const handleAddCardModalClose = () => setIsCardModalVisible(false);
+  const handleVerify = () => setVerify(true)
+  const handleAddCardModalShow = () => {
+    setIsCardModalVisible(true);
+    handleMainModalClose();
+  };
+  const handleAddCard = () => {
+    if (newCardNumber.length === 16 && newCardExpiry.match(/^\d{2}\/\d{2}$/)) {
+      const newCard = {
+        id: cards.length + 1,
+        number: `**** **** **** ${newCardNumber.slice(-4)}`,
+        expiry: newCardExpiry,
+      };
+      setCards([...cards, newCard]);
+      setNewCardNumber("");
+      setNewCardExpiry("");
+    } else {
+      alert(
+        "Please enter a valid 16-digit card number and expiry date (MM/YY)."
+      );
+    }
+  };
 
+  const handleCardSelect = (id) => {
+    setSelectedCard(id);
+  };
+
+  const handlePayment = () => {
+    if (selectedCard) {
+      alert(`Card ${selectedCard} selected for payment!`);
+    } else {
+      alert("Please select a card for payment.");
+    }
+  };
+  /////////
+  const handleAmount = (e) => {
+    const { name, value } = e.target;
+    setMoney({ ...money, [name]: value });
+  };
+  const sendAmount = async () => {
+    try {
+      const res = await axios.post(
+        `${api_url}/api/payment/project/`,
+        { project_id: id, amount: money?.money },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(res);
+      if (!cart||cart?.length===0) {
+        handleAddCardModalShow();
+      } else {
+        handleMainModalShow();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const card_detail = {
+    cardnumber: "",
+    expireDate: "",
+    cardname: "",
+  };
+  const [cardState, setCardState] = useState(card_detail);
+  const [cart, setCart] = useState(null);
+  const [value, setValue] = useState("");
+  const [message, setMessage] = useState("")
+  const cardChange = (e) => {
+    const { name, value } = e.target;
+    setCardState({ ...cardState, [name]: value });
+  };
+  const getCart = async () => {
+    try {
+      const res = axios.get(`${api_url}/api/card/get/ `, {
+       headers:{
+       Authorization: `Bearer ${token}`
+       }});
+      setCart(res?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const AddCard = async () => {
+    try {
+      const response = await axios.post(
+        `${api_url}/api/card/create/`,
+        cardState,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response);
+      setMessage(response?.data?.message?.cid)
+      getCart();
+      handleAddCardModalClose();
+      handleVerify()
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const addCart = async() =>{
+      try {
+        const res = axios.post(`${api_url}/api/card/confirm/`, {otp_code:value, id:message},
+        {
+          headers:{
+          Authorization:`Bearer ${token}`
+          }
+        });
+          console.log(res)
+      } catch (error) {
+        console.log(error)
+      }
+  }
+   useEffect(() => {
+    getPitchData();
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  if (!allTransaction || allTransaction.length === 0) {
+    return <p className="text-center py-5 ">Loading or No data available...</p>;
+  }
+  if (!meTransaction || meTransaction.length === 0) {
+    return <p className="text-center py-5">Loading or No data available...</p>;
+  }
   return (
     <>
       <div className="page-content bg-white">
@@ -362,13 +556,16 @@ const FundraiserDetail = () => {
                       <input
                         type="text"
                         className="form-control border-0"
-                        placeholder="Pul miqdorini kiriting"
+                        placeholder="Enter the amount of money"
                         style={{
                           height: commonHeight,
                           borderRadius: "0",
                           borderRight: inputBorderRightOnly,
                           outline: "none",
                         }}
+                        name="money"
+                        value={money?.money}
+                        onChange={handleAmount}
                       />
                       <div
                         className="input-group-prepend border-left-red "
@@ -391,6 +588,7 @@ const FundraiserDetail = () => {
                         <button
                           className="btn rounded-0 text-white"
                           type="button"
+                          onClick={sendAmount}
                           style={{
                             height: commonHeight,
                             backgroundColor: buttonBackground,
@@ -551,7 +749,11 @@ const FundraiserDetail = () => {
                                 <td>{formatDate(transaction?.date)}</td>
                                 <td>{transaction?.comment}</td>
                                 <td>
-                                  <a href={transaction?.invoice_file} className="download-link" target="blank">
+                                  <a
+                                    href={transaction?.invoice_file}
+                                    className="download-link"
+                                    target="blank"
+                                  >
                                     <i className="fa fa-download"></i> Download
                                     File
                                   </a>
@@ -593,7 +795,11 @@ const FundraiserDetail = () => {
                                 <td>{formatDate(transaction?.date)}</td>
                                 <td>{transaction?.comment}</td>
                                 <td>
-                                <a href={transaction?.invoice_file} className="download-link" target="blank">
+                                  <a
+                                    href={transaction?.invoice_file}
+                                    className="download-link"
+                                    target="blank"
+                                  >
                                     <i className="fa fa-download"></i> Download
                                     File
                                   </a>
@@ -699,16 +905,16 @@ const FundraiserDetail = () => {
                   </div>
                 </Tab>
                 <Tab eventKey="investor" title="Investor">
-                <Table responsive>
-                          <thead>
-                            <tr>
-                              <th>Id</th>
-                              <th>Email</th>
-                              <th>Firstname</th>
-                              <th>Lastname</th>
-                              
-                              <th>Phone Number</th>
-                              {/* {allTransaction.length > 0 && (
+                  <Table responsive>
+                    <thead>
+                      <tr>
+                        <th>Id</th>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
+                        <th>Email</th>
+
+                        <th>Phone Number</th>
+                        {/* {allTransaction.length > 0 && (
                                 <>
                                   {Object.keys(allTransaction[0]).map(
                                     (key, index) => (
@@ -717,30 +923,31 @@ const FundraiserDetail = () => {
                                   )}
                                 </>
                               )} */}
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {investor&&investor.map((transaction, index) => (
-                              <tr key={index}>
-                                <td>{transaction?.id}</td>
-                                <td>{transaction?.user?.email}</td>
-                                <td>{transaction?.user?.first_name}</td>
-                                <td>{transaction?.user?.last_name}</td> 
-                                <td>{transaction?.user?.phone_number}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </Table>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {investor &&
+                        investor.map((transaction, index) => (
+                          <tr key={index}>
+                            <td>{transaction?.id}</td>
+                            <td>{transaction?.user?.first_name}</td>
+                            <td>{transaction?.user?.last_name}</td>
+                            <td>{transaction?.user?.email}</td>
+                            <td>{transaction?.user?.phone_number}</td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </Table>
                 </Tab>
                 <Tab eventKey="documents" title="Documents">
-                <Table responsive>
-                          <thead>
-                            <tr>
-                              <th>Id</th>
-                              <th>Filename</th>
-                              <th>Source</th>
-                              {/* Jadval sarlavhalarini dinamik ko'rsatish */}
-                              {/* {allTransaction.length > 0 && (
+                  <Table responsive>
+                    <thead>
+                      <tr>
+                        <th>Id</th>
+                        <th>Filename</th>
+                        <th>Source</th>
+                        {/* Jadval sarlavhalarini dinamik ko'rsatish */}
+                        {/* {allTransaction.length > 0 && (
                                 <>
                                   {Object.keys(meTransaction[0]).map(
                                     (key, index) => (
@@ -749,33 +956,36 @@ const FundraiserDetail = () => {
                                   )}
                                 </>
                               )} */}
-                            </tr>
-                          </thead>
-                          <tbody>
-                          
-                            <tr>
-                              <td>1</td>
-                              <td>Business Plan</td>
-                              <td>
-                              <a href={allData?.business_plan} className="download-link" target="blank">
-                                    <i className="fa fa-download"></i> Download
-                                    File
-                                  </a>
-                              </td>
-                             
-                            </tr>
-                            <tr>
-                              <td>2</td>
-                              <td>Financial Statements</td>
-                              <td>
-                              <a href={allData?.financial_statements} className="download-link" target="blank">
-                                    <i className="fa fa-download"></i> Download
-                                    File
-                                  </a>
-                              </td>
-                             
-                            </tr>
-                            {/* {meTransaction.map((transaction, index) => (
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>1</td>
+                        <td>Business Plan</td>
+                        <td>
+                          <a
+                            href={allData?.business_plan}
+                            className="download-link"
+                            target="blank"
+                          >
+                            <i className="fa fa-download"></i> Download File
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>2</td>
+                        <td>Financial Statements</td>
+                        <td>
+                          <a
+                            href={allData?.financial_statements}
+                            className="download-link"
+                            target="blank"
+                          >
+                            <i className="fa fa-download"></i> Download File
+                          </a>
+                        </td>
+                      </tr>
+                      {/* {meTransaction.map((transaction, index) => (
                               <tr key={index}>
                                 <td>{transaction?.id}</td>
                                 <td>{formatDate(transaction?.date)}</td>
@@ -789,8 +999,8 @@ const FundraiserDetail = () => {
                                 <td>{transaction?.amount}</td>
                               </tr>
                             ))} */}
-                          </tbody>
-                        </Table>
+                    </tbody>
+                  </Table>
                 </Tab>
                 {/* <Tab eventKey="updates" title="Updates">
                   Tab content for Home
@@ -800,139 +1010,130 @@ const FundraiserDetail = () => {
           </div>
         </section>
       </div>
-      {/* <Modal className="modal fade modal-wrapper" id="modalRefer" show={referModal} onHide={setReferModal} centered>               
-                <div className="modal-header">
-                    <h5 className="modal-title">Refer a Friend</h5>
-                    <button type="button" className="btn-close" onClick={()=>setReferModal(false)}><i className="flaticon-close"></i></button>
-                </div>
-                <div className="modal-body">
-                    <form className="dz-form contact-bx" method="POST">
-                        <div className="form-group style-1 align-items-center">
-                            <label className="form-label">Name</label>
-                            <div className="input-group">
-                                <input name="dzName" required="" type="text" className="form-control" placeholder="Jakob Bothman" />
-                            </div>
-                        </div>
-                        <div className="form-group style-1 align-items-center">
-                            <label className="form-label">Email address</label>
-                            <div className="input-group">
-                                <input name="dzEmail" required="" type="text" className="form-control" placeholder="marseloque@mail.com" />
-                            </div>
-                        </div>
-                        <div className="form-group style-1 align-items-center">
-                            <label className="form-label">Phone Number</label>
-                            <div className="input-group">
-                                <input name="dzPhoneNumber" type="number" className="form-control" placeholder="Phone Number" />
-                            </div>
-                        </div>
-                        <div className="form-group mb-0 text-center">
-                            <button name="submit" type="submit" value="Submit" className="btn btn-primary">Refer Now</button>
-                        </div>
-                    </form>
-                </div>
-            </Modal>
-            <Modal className="modal fade modal-wrapper" id="modalDonate" show={modalDonate} onHide={setModalDonate} > 
-                <div className="modal-header">
-                    <h5 className="modal-title">Choose a donation amount</h5>
-                    <button type="button" className="btn-close" onClick={()=>setModalDonate(false)}><i className="flaticon-close"></i></button>
-                </div>
-                <div className="modal-body">
-                    <form action="index.html">
-                        <div className="row">
-                            <div className="col-lg-12">
-                                <div className="tag-donate style-1">
-                                    <div className="donate-categories">
-                                        <div className="form-check">
-                                            <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
-                                            <label className="form-check-label" htmlFor="flexRadioDefault1">
-                                                $500
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div className="donate-categories">
-                                        <div className="form-check">
-                                            <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" defaultChecked />
-                                            <label className="form-check-label" htmlFor="flexRadioDefault2">
-                                                $1000
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div className="donate-categories">
-                                        <div className="form-check">
-                                            <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" defaultChecked />
-                                            <label className="form-check-label" htmlFor="flexRadioDefault3">
-                                                $2000
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div className="donate-categories">
-                                        <div className="form-check">
-                                            <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault4" defaultChecked />
-                                            <label className="form-check-label" htmlFor="flexRadioDefault4">
-                                                $5000
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <p>Most Donors donate approx <span>$1000</span> to this Fundraiser</p>
-                                </div>
-                            </div>
-                            <div className="col-lg-12">
-                                <div className="form-group">
-                                    <label className="form-label">Other Amount</label>
-                                    <div className="input-group">
-                                        <input type="number" className="form-control"  placeholder="Other Amount" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-lg-12">
-                                <div className="form-group">
-                                    <label className="form-label">Name</label>
-                                    <div className="input-group">
-                                        <input name="dzName" required="" type="text" className="form-control" placeholder="Jakob Bothman" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-lg-12">
-                                <div className="form-group">
-                                    <label className="form-label">Email address</label>
-                                    <div className="input-group">
-                                        <input name="dzEmail" required type="text" className="form-control" placeholder="info@mail.com" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-lg-12">
-                                <div className="form-group">
-                                    <label className="form-label">Phone Number</label>
-                                    <div className="input-group">
-                                        <input type="number" className="form-control" placeholder="Phone Number" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-lg-12">
-                                <div className="form-group">
-                                    <label className="form-label">Address</label>
-                                    <div className="input-group">
-                                        <input required type="text" className="form-control" placeholder="Address" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-lg-12">
-                                <div className="form-group">
-                                    <label className="form-label">Pancard</label>
-                                    <div className="input-group">
-                                        <input type="number" className="form-control" placeholder="Pancard" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-lg-12">
-                                <div className="form-group mb-0 text-center">
-                                    <button name="submit" type="submit" value="Submit" className="btn btn-primary btn-block">Proceed To Pay</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>                    
-            </Modal> */}
+      <Modal show={isVisible} onHide={handleMainModalClose} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Payment Options</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Row>
+            {cards.map((card) => (
+              <Col md={6} key={card.id}>
+                <Card
+                  className={selectedCard === card.id ? "border-success" : ""}
+                  onClick={() => handleCardSelect(card.id)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <Card.Body>
+                    {/* <Card.Title>Card {card.id}</Card.Title> */}
+                    <Card.Text>
+                      {card.number}
+                      <br />
+                      Expiry: {card.expiry}
+                    </Card.Text>
+                    <Button variant="outline-primary">
+                      {selectedCard === card.id ? "Selected" : "Select"}
+                    </Button>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+          <hr />
+          <Button variant="success" onClick={handleAddCardModalShow}>
+            + Add New Card
+          </Button>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleMainModalClose}>
+            Close
+          </Button>
+          <Button variant="success" onClick={handlePayment}>
+            Proceed to Payment
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Add New Card Modal */}
+      <Modal show={isCardModalVisible} onHide={handleAddCardModalClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add New Card</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Card Number (16 digits)</Form.Label>
+              <Form.Control
+                type="text"
+                maxLength="16"
+                name="cardnumber"
+                value={cardState?.cardnumber}
+                onChange={cardChange}
+                placeholder="Enter card number"
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Expiry Date (yy/mm)</Form.Label>
+              <Form.Control
+                type="text"
+                maxLength="10"
+                name="expireDate"
+                value={cardState?.expireDate}
+                onChange={cardChange}
+                placeholder="YY/MM"
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Card Name</Form.Label>
+              <Form.Control
+                type="text"
+                maxLength="10"
+                name="cardname"
+                value={cardState?.cardname}
+                onChange={cardChange}
+                placeholder="Card name"
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleAddCardModalClose}>
+            Cancel
+          </Button>
+          <Button variant="success" onClick={AddCard}>
+            Add Card
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      {/* {Verifikatsiya} */}
+      <Modal show={verify} onHide={()=>setVerify(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Verify</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+          
+            <Form.Group className="mb-3">
+              <Form.Label>Verify </Form.Label>
+              <Form.Control
+                type="text"
+                maxLength="10"
+                name="cardname"
+                value={value}
+                onChange={(e)=>setValue(e.target.value)}
+                placeholder="Card name"
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={()=>setVerify(false)}>
+            Cancel
+          </Button>
+          <Button variant="success" onClick={addCart}>
+            Add Card
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };

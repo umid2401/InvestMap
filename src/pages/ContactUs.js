@@ -1,14 +1,6 @@
 /* eslint-disable jsx-a11y/iframe-has-title */
 import React, { useEffect, useRef, useState } from "react";
-import emailjs from "@emailjs/browser";
-import swal from "sweetalert";
-import { Link, useNavigate } from "react-router-dom";
-
-import PageBanner from "../layouts/PageBanner";
-import PartnershipSlider from "./../components/Home/PartnershipSlider";
-import UpdateBlog from "./../components/Home/UpdateBlog";
-
-import bg from "../assets/images/banner/bnr1.jpg";
+import { Link } from "react-router-dom";
 import shape1 from "../assets/images/pattern/shape1.png";
 import shape3 from "../assets/images/pattern/shape3.png";
 import shape5 from "../assets/images/pattern/shape5.png";
@@ -16,7 +8,6 @@ import shape6 from "../assets/images/pattern/shape6.png";
 import shape7 from "../assets/images/pattern/shape7.png";
 import axios from "axios";
 import { toast } from "react-toastify";
-
 const ContactUs = () => {
   const api_url = process.env.REACT_APP_INVEST_MAP_API;
   const [card, setCard] = useState(null);
@@ -26,7 +17,6 @@ const ContactUs = () => {
     email:"",
     phone_number:"",
     message:""
-
   }
   const [contactState, setContactstate] = useState(state);
   const handleChange = (e) =>{
@@ -79,11 +69,6 @@ const ContactUs = () => {
   return (
     <>
       <div className="page-content bg-white">
-        <PageBanner
-          maintitle="Home"
-          pagetitle="Contact Us"
-          background={bg}
-        />
         <section className="content-inner-1 bg-light section-pattren1">
           <div className="container">
             <div className="row justify-content-center">
@@ -235,19 +220,6 @@ const ContactUs = () => {
           <img src={shape7} className="shape-1 move-2" alt="shape" />
           <img src={shape6} className="shape-3 move-2" alt="shape" />
         </section>
-        <section className="clients-wrapper p-0">
-          <div className="container">
-            <div className="section-head text-center">
-              <h3 className="title">Our Partnership</h3>
-            </div>
-            <PartnershipSlider />
-          </div>
-        </section>
-        <div className="call-action style-1 content-inner-1">
-          <div className="container">
-            <UpdateBlog />
-          </div>
-        </div>
       </div>
     </>
   );
