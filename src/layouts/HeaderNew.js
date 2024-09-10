@@ -612,7 +612,7 @@ const HeaderNew = () => {
                     onClick={toggle}
                   >
                     <i className="fa fa-globe me-2"></i>{" "}
-                    {localStorage.getItem("langs").toLocaleUpperCase()}
+                    {localStorage.getItem("langs").toUpperCase()}
                   </button>
 
                   {/* Custom Dropdown Menu */}
