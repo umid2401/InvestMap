@@ -3,9 +3,9 @@
 /* eslint-disable no-sequences */
 /* eslint-disable jsx-a11y/anchor-has-content */
 import React, { useState, useEffect, useReducer, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Button, Dropdown, DropdownButton, Form, Modal } from "react-bootstrap";
-import { MenuListArray2 } from "./Menu";
+// import { MenuListArray2 } from "./Menu";
 import { toast } from "react-toastify";
 import Collapse from "react-bootstrap/Collapse";
 import axios from "axios";
@@ -13,6 +13,7 @@ import axios from "axios";
 import logo from "./../assets/images/logo.png";
 import newlogo from "./../assets/images/logo-landing.png";
 import "..//assets//vendor/bootstrap/css/bootstrap.min.css";
+import { useTranslation } from "react-i18next";
 // import logo_new1 from "./../assets/images/logo_new1.png";
 const HeaderNew = () => {
   const [name, setName] = useState("");
@@ -223,6 +224,162 @@ const HeaderNew = () => {
       }
     }
   };
+  const { t, i18n } = useTranslation();
+
+  const MenuListArray2 = [
+    {
+      title: t("home"),
+      to: "/",
+    },
+    {
+      title: t("investing"),
+      to: "/investing",
+    },
+
+    {
+      title: t("raising"),
+      to: "/raising",
+      // content : [
+      //     {
+      //         title : "About Us",
+      //         to : "/about-us"
+      //     },
+      //     {
+      //         title : "Volunteer",
+      //         to : "#",
+      //         className:"sub-menu",
+      //         content : [
+      //             {
+      //                 title:"Volunteer",
+      //                 to:"/volunteer"
+      //             },
+      //             {
+      //                 title:"Become A Volunteer",
+      //                 to:"/become-a-volunteer"
+      //             },
+      //         ],
+      //     },
+      //     {
+      //         title : "Faq",
+      //         to : "/faq"
+      //     },
+      //     {
+      //         title : "Certificates",
+      //         to : "/certificates"
+      //     },
+      //     {
+      //         title : "Ask A Question",
+      //         to : "/ask-a-question"
+      //     },
+      //     {
+      //         title : "Happy Clients",
+      //         to : "/happy-clients"
+      //     },
+      //     {
+      //         title : "How It Works",
+      //         to : "/how-it-works"
+      //     },
+      //     {
+      //         title : "Mission",
+      //         to : "/mission"
+      //     },
+      //     {
+      //         title : "Terms And Condition",
+      //         to : "/terms-and-condition"
+      //     },
+      //     {
+      //         title : "Coming Soon",
+      //         to : "/coming-soon"
+      //     },
+      //     {
+      //         title : "Under Maintenance",
+      //         to : "/under-maintenance"
+      //     },
+      //     {
+      //         title : "Error 404",
+      //         to : "/error-404"
+      //     },
+      // ],
+    },
+    {
+      title: t("academy"),
+      to: "/academy",
+    },
+    {
+      title: t("club"),
+      to: "/club",
+    },
+    {
+      title: t("resource"),
+      classChange: "sub-menu-down",
+      content: [
+        {
+          title: "About Us",
+          to: "/about-us",
+        },
+
+        {
+          title: "Events",
+          to: "/events",
+        },
+        {
+          title: "Faq",
+          to: "/faq",
+        },
+        {
+          title: "Contact",
+          to: "/contact",
+        },
+      ],
+    },
+
+    // {
+    //     title:"Fundraiser",
+    //     classChange:"sub-menu-down",
+    //     content : [
+    //         {
+    //             title:"Browse Fundraiser",
+    //             to:"/browse-fundraiser"
+    //         },
+    //         {
+    //             title:"Become A Fundraiser",
+    //             to:"/become-a-fundraiser"
+    //         },
+    //         {
+    //             title:"Fundraiser Detail",
+    //             to:"/fundraiser-detail"
+    //         },
+    //     ],
+    // },
+
+    // {
+    //     title:"Blog",
+    //     classChange:"sub-menu-down",
+    //     content:[
+    //         {
+    //             title:"Blog",
+    //             to:"/blog"
+    //         },
+    //         {
+    //             title:"Blog Grid",
+    //             to:"/blog-grid"
+    //         },
+    //         {
+    //             title:"Blog List",
+    //             to:"/blog-list"
+    //         },
+    //         {
+    //             title:"Blog Details",
+    //             to:"/blog-details"
+    //         },
+    //     ],
+    // },
+    {},
+    // {
+    //     title: 'Contact Us',
+    //     to: './contact-us',
+    // },
+  ];
   //Forgot va Reset jarayoni uchun yoziladigan funksiyalar
   // sendSms
   const sendEmail = () => {
@@ -422,7 +579,7 @@ const HeaderNew = () => {
   const [active, setActive] = useState(false);
   const [too, setToo] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("Eng");
-  const lang= localStorage.getItem("langs");
+  const lang = localStorage.getItem("langs") || "EN";
   const [language, setLanguage] = useState("en");
   const toggle = (e) => {
     setToo(!too);
@@ -468,6 +625,7 @@ const HeaderNew = () => {
     setLanguage(language);
     setToo(false); // Close dropdown after selection
     localStorage.setItem("langs", language);
+    i18n.changeLanguage(language);
   };
   return (
     <>
@@ -501,14 +659,14 @@ const HeaderNew = () => {
               </button>
               <div className="extra-nav d-flex gap-3">
                 {token ? (
-                  <div class="extra-cell position-relative ">
+                  <div className="extra-cell position-relative ">
                     <button
-                      class="btn py-2 px-3 btn-outline-secondary btnhover1"
+                      className="btn py-2 px-3 btn-outline-secondary btnhover1"
                       ref={button2Ref}
                       onClick={() => setActive(!active)}
                     >
-                      <i class="fa-solid fa-user"></i>
-                      <span class="m-l10">My Account</span>
+                      <i className="fa-solid fa-user"></i>
+                      <span className="m-l10">My Account</span>
                     </button>
                     <div
                       ref={secondDropdownRef}
@@ -612,8 +770,7 @@ const HeaderNew = () => {
                     type="button"
                     onClick={toggle}
                   >
-                    <i className="fa fa-globe me-2"></i>{" "}
-                    {lang?.toUpperCase()}
+                    <i className="fa fa-globe me-2"></i> {lang?.toUpperCase()}
                   </button>
 
                   {/* Custom Dropdown Menu */}
@@ -659,7 +816,11 @@ const HeaderNew = () => {
               >
                 <div className="logo-header logo-dark">
                   <Link to={"/"}>
-                    <img src={logo} alt="" />
+                    <img
+                      className="w-75"
+                      src={newlogo}
+                      alt="Logo for Invest Hub"
+                    />
                   </Link>
                 </div>
                 <ul className="nav navbar-nav navbar navbar-left">
@@ -668,7 +829,39 @@ const HeaderNew = () => {
                     if (menuClass !== "sub-menu-down") {
                       return (
                         <li className={menuClass} key={index}>
-                          <Link to={data.to}>{data.title}</Link>
+                          <NavLink
+  to={data?.to}
+  style={({ isActive }) => ({
+    fontWeight: "500",
+   
+    alignItems: "center",
+    gap: "16px",
+    fontSize: "15px",
+    
+    // backgroundColor: isActive ? "whitesmoke" : "transparent",
+    color: isActive ? "#FF7468" : "",
+    
+    // textDecoration: isActive ? "underline" : "none",
+    // ":hover": {
+    //   backgroundColor: "whitesmoke",
+    // },
+  })}
+>
+  {data.title}
+</NavLink>
+                          {/* <NavLink
+                            to={data?.to}
+                            className={({ isActive }) =>
+                              `font-medium hover:bg-[whitesmoke] px-11 rounded-[10px] items-center flex gap-x-4 text-[15px] leading-6 py-3 ${
+                                isActive
+                                  ? "bg-[whitesmoke] text-blue-500 link"
+                                  : "border-transparent text-[darkgrey]"
+                              }`
+                            }
+                          >
+                            {data.title}
+                          </NavLink> */}
+                          {/* <Link to={data.to}>{data.title}</Link> */}
                         </li>
                       );
                     } else {

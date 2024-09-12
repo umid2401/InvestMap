@@ -6,23 +6,36 @@
 
 //componenet
 import Mainslider2 from "../components/Home2/Mainslider2";
-// import { Link } from "react-router-dom";
 import ServiceBlog from "../components/Home2/ServiceBlog";
 import FaqComponent from "../components/FaqComponent";
 import ContactComponent from "../components/ContactComponent";
+import RaisingBlog from "../components/RaisingBlog";
 
 
 const Home2 = () => {
-//   const { changeBackground, changePrimaryColor } = useContext(ThemeContext);
-//   useEffect(() => {
-//     changeBackground({
-//       value: "data-typography-1",
-//       label: "data-typography-1",
-//     });
-//     changePrimaryColor("color-skin-2");
-//   }, []);
 
-  
+  const accordBlog = [
+    { title: "How do I start raising funds on Investmap?", 
+      answer:"To get started, sign up on the Investmap platform and submit your project. Our team will review your project, and once approved, it will be listed on the platform for investors to view and invest in." },
+    { title: "How long does the fundraising process take?",
+      answer:"The duration of the fundraising process varies depending on factors such as the attractiveness of your project, investor interest, and the amount of funding required. Typically, it can take anywhere from a few weeks to several months."
+     },
+    { title: " How are investors selected?",
+      answer:" Investmap has thousands of individual investors and clubs on the platform. They review your project and decide whether to invest. The more compelling your project is, the faster you are likely to secure investments."
+     },
+    { title: " Are there any fees involved in raising funds?",
+      answer:"Using the Investmap platform is free, but once your fundraising is successful, transaction or commission fees may apply. The fee amount depends on the size of the project and other investor-related factors."
+     },
+    { title: " What happens if my project is rejected?",
+      answer:" If your project is rejected, our expert team will provide feedback on how to improve it and guide you on re-submitting it to increase its chances of approval."
+     },
+    { title: " What kind of support can I get during the fundraising process?",
+      answer:"The Investmap team is available to assist you every step of the way. From preparing your project to managing investor relationships and funds, our 24/7 support service is always available to help."
+     },
+    { title: " How are funds disbursed?",
+      answer:"Once the funds are secured, they are disbursed in stages based on predefined KPIs or milestones. The release of funds will depend on the progress of your project."
+     },
+  ];
   return (
     <>
       <div className="page-content bg-white">
@@ -44,7 +57,7 @@ const Home2 = () => {
                   <h2 className="title">How it works?</h2>
                 </div>
                 <div className="row justify-content-center">
-                  <ServiceBlog />
+                  <RaisingBlog/>
                 </div>
               </div>
             </div>
@@ -58,8 +71,8 @@ const Home2 = () => {
             <div className="row">
               <div className="col-lg-3 wow fadeInUp" data-wow-delay="0.2s">
                 <div className="section-head">
-                  <h5 className="sub-title text-white">JOIN US</h5>
-                  <h2 className="title text-white">We Need Your Help</h2>
+                  {/* <h5 className="sub-title text-white">JOIN US</h5> */}
+                  <h2 className="title text-white">We help your raise founds </h2>
                 </div>
               </div>
               <div className="col-lg-9">
@@ -121,7 +134,7 @@ const Home2 = () => {
                         required=""
                         type="text"
                         className="form-control"
-                        placeholder="Your Message"
+                        placeholder="Project name"
                       />
                     </div>
                     <div className="col-md-4 col-sm-6">
@@ -141,7 +154,7 @@ const Home2 = () => {
           </div>
         </section>
 
-        <FaqComponent/>
+        <FaqComponent accordBlog={accordBlog}/>
         <ContactComponent/>
         
       </div>

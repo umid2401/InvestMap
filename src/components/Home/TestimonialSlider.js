@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 //import { LazyLoadImage } from 'react-lazy-load-image-component';
@@ -13,18 +13,38 @@ import pic3 from './../../assets/images/testimonials/pic3.jpg';
 
 // import Swiper core and required modules
 import { Autoplay, Navigation, Pagination } from "swiper";
+import axios from 'axios';
 
 //SwiperCore.use([EffectCoverflow,Pagination]);
 
-const dataBlog = [
-	{image: pic1, title:"Johan Lee"},
-	{image: pic2, title:"Lee Jordon"},
-	{image: pic3, title:"Alex Costa"}
-];
+
 
 const TestimonialSlider = () => {
 	const navigationPrevRef = React.useRef(null)
 	const navigationNextRef = React.useRef(null)
+	const [data, setData] = useState(null);
+	const api_url = process.env.REACT_APP_INVEST_MAP_API;
+	const getData = async()=>{
+		try {
+			const res = await axios.get(`${api_url}/api/testimonials/`);
+			setData(res?.data);
+			console.log(res)
+		} catch (error) {
+			console.log(error)
+			
+		}
+	}
+	useEffect(()=>{
+		getData();
+	},[]);
+	const dataBlog = [
+		{image: pic1, title:"Johan Lee"},
+		{image: pic2, title:"Lee Jordon"},
+		{image: pic3, title:"Alex Costa"}
+	];
+	if(!data || data.length===0){
+		setData(dataBlog)
+	}
     return (
         <>
             <Swiper className="testimonial-swiper"	
@@ -49,16 +69,16 @@ const TestimonialSlider = () => {
 				}}
 			>	
                
-				{dataBlog.map((d,i)=>(
+				{data&&data.map((d,i)=>(
 					<SwiperSlide key={i}>						
                         <div className="testimonial-1">
 							<div className="testimonial-text">
-								<p>“Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni..</p>
+								<p>{d?.comment}</p>
 							</div>
 							<div className="testimonial-details">
 								<div className="testimonial-info">
 									<div className="testimonial-pic">
-										<img src={d.image} alt="" />
+										<img src={`${api_url}${d.image}`} alt="" />
 									</div>
 									<div className="clearfix">
 										<h5 className="testimonial-name">{d.title}</h5>

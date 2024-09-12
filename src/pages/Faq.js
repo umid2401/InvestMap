@@ -24,6 +24,7 @@ const Faq = () => {
       const response = await axios.get(`${api_url}/api/faqs/`);
       const data = response?.data;
       setFaqData(data);
+      console.log(data)
     } catch (error) {
       console.log(error);
     }

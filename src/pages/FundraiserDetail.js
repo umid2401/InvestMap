@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -34,6 +36,8 @@ import {
 import { CommentBlog } from "../components/BlogDetailsLeftBar";
 import { Element } from "react-scroll";
 import axios from "axios";
+import jsPDF from "jspdf";
+import i18next from "i18next";
 SwiperCore.use([Navigation, Pagination, Autoplay]);
 Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 const FundraiserDetail = () => {
@@ -53,7 +57,7 @@ const FundraiserDetail = () => {
   const [investor, setInvestor] = useState(null);
   const [allData, setAllData] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [verify, setVerify] = useState(false)
+  const [verify, setVerify] = useState(false);
   const [money, setMoney] = useState({ money: "" });
   const [isCardModalVisible, setIsCardModalVisible] = useState(false);
   const [imageData, setImageData] = useState({
@@ -85,7 +89,7 @@ const FundraiserDetail = () => {
     let targetDate = localStorage.getItem("targetDate");
     if (!targetDate) {
       // If no target date is stored, save the current deadline (12th September)
-      targetDate = new Date("2024-09-12T00:00:00").toString();
+      targetDate = new Date("2024-09-16T00:00:00").toString();
       localStorage.setItem("targetDate", targetDate);
     }
     const interval = setInterval(() => {
@@ -122,7 +126,7 @@ const FundraiserDetail = () => {
           }
         });
       } else {
-        console.error("pitchData mavjud emas yoki noto'g'ri formatda.");
+        // console.error("pitchData mavjud emas yoki noto'g'ri formatda.");
       }
     };
     window.addEventListener("scroll", handleScroll);
@@ -155,7 +159,7 @@ const FundraiserDetail = () => {
         `http://api.investmap.uz/api/project/visible/${id}`,
         {
           headers: {
-            "Accept-Language": getStoredLanguage(),
+            "Accept-Language": "uz",
           },
         }
       );
@@ -240,7 +244,7 @@ const FundraiserDetail = () => {
       );
       const data = response?.data;
       setAllTransaction(data);
-      console.log(response);
+      console.log(response)
     } catch (error) {
       console.log(error);
     }
@@ -268,8 +272,9 @@ const FundraiserDetail = () => {
   useEffect(() => {
     getAllTransaction();
     getMeTransaction();
+    // getPitchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedLanguage]);
+  }, []);
 
   ////////////////////////////////////////////////
   const formatDate = (dateString) => {
@@ -300,9 +305,7 @@ const FundraiserDetail = () => {
     return `${year}/${month}/${day}`;
   };
   const formattedDate = formatDate(startDate);
-
   //Modallar
-
   const commonHeight = "2.5rem";
   const borderStyle = "1px solid #ced4da"; // Border color for the whole group
   const buttonBackground = "#28a745";
@@ -315,7 +318,7 @@ const FundraiserDetail = () => {
   const handleMainModalClose = () => setIsVisible(false);
   const handleMainModalShow = () => setIsVisible(true);
   const handleAddCardModalClose = () => setIsCardModalVisible(false);
-  const handleVerify = () => setVerify(true)
+  const handleVerify = () => setVerify(true);
   const handleAddCardModalShow = () => {
     setIsCardModalVisible(true);
     handleMainModalClose();
@@ -341,9 +344,14 @@ const FundraiserDetail = () => {
     setSelectedCard(id);
   };
 
-  const handlePayment = () => {
+  const handlePayment = async() => {
     if (selectedCard) {
-      alert(`Card ${selectedCard} selected for payment!`);
+      const response = await axios.post(`${api_url}/api/payment/confirm/`,{card_id:selectedCard,invoice_id},{
+        headers:{
+          Authorization:`Bearer ${token}`
+        }
+      });
+      handleMainModalClose();
     } else {
       alert("Please select a card for payment.");
     }
@@ -353,6 +361,7 @@ const FundraiserDetail = () => {
     const { name, value } = e.target;
     setMoney({ ...money, [name]: value });
   };
+  const [invoice_id, setInvoice_id] = useState(null);
   const sendAmount = async () => {
     try {
       const res = await axios.post(
@@ -365,10 +374,12 @@ const FundraiserDetail = () => {
         }
       );
       console.log(res);
-      if (!cart||cart?.length===0) {
+      setInvoice_id(res?.data?.message?.id);
+      if (!cart) {
         handleAddCardModalShow();
       } else {
-        handleMainModalShow();
+        setIsVisible(true);
+        console.log(cart);
       }
     } catch (error) {
       console.log(error);
@@ -382,18 +393,20 @@ const FundraiserDetail = () => {
   const [cardState, setCardState] = useState(card_detail);
   const [cart, setCart] = useState(null);
   const [value, setValue] = useState("");
-  const [message, setMessage] = useState("")
+  const [message, setMessage] = useState(null);
   const cardChange = (e) => {
     const { name, value } = e.target;
     setCardState({ ...cardState, [name]: value });
   };
   const getCart = async () => {
     try {
-      const res = axios.get(`${api_url}/api/card/get/ `, {
-       headers:{
-       Authorization: `Bearer ${token}`
-       }});
+      const res = await axios.get(`${api_url}/api/card/get/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setCart(res?.data);
+      console.log(res)
     } catch (error) {
       console.log(error);
     }
@@ -410,38 +423,121 @@ const FundraiserDetail = () => {
         }
       );
       console.log(response);
-      setMessage(response?.data?.message?.cid)
-      getCart();
+      const message1 = response?.data?.message;
+      if (message1) {
+        setMessage(message1.slice(4));
+      }
       handleAddCardModalClose();
-      handleVerify()
+      handleVerify();
+      console.log(message1);
     } catch (error) {
       console.log(error);
     }
   };
-  const addCart = async() =>{
-      try {
-        const res = axios.post(`${api_url}/api/card/confirm/`, {otp_code:value, id:message},
-        {
-          headers:{
-          Authorization:`Bearer ${token}`
+  const addCart = async () => {
+    try {
+      if (message) {
+        getCart();
+        const res = await axios.post(
+          `${api_url}/api/card/confirm/`,
+          { otp: value, cardid: message },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        });
-          console.log(res)
-      } catch (error) {
-        console.log(error)
+        );
+        console.log(res);
       }
+    } catch (error) {
+      console.log(message);
+      console.log(error);
+    }
+  };
+  const confirmPayment = async() =>{
+    try {
+      const res = await axios.post() 
+    } catch (error) {
+      
+    }
   }
-   useEffect(() => {
+  
+  useEffect(() => {
     getPitchData();
-    
+    getCart();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [i18next.language]);
+  //generate pdf
+  const generatePDF = (data) => {
+    const doc = new jsPDF();
+  
+    // Background Design (subtle gradient effect)
+    doc.setFillColor(240, 248, 255); // Light azure color
+    doc.rect(0, 0, 210, 297, "F");
+  
+    // Header - Blue Banner with White Text
+    doc.setFillColor(41, 128, 185); // Modern blue
+    doc.rect(0, 0, 210, 30, "F");  // Header banner
+  
+    doc.setTextColor(255, 255, 255); // White text
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.text("Payment Receipt", 105, 20, { align: "center" });
+  
+    // Header icon (optional - just for decoration)
+    doc.setFontSize(24);
+    // doc.text("💳", 15, 20); // Payment icon
+  
+    // Payment Details Section
+    doc.setTextColor(0, 0, 0); // Black text for content
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    doc.text("Payment Details", 10, 50);
+  
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(12);
+    doc.text(`Transaction ID: ${data.transation_id}`, 10, 60);
+    doc.text(`Amount: $${data.amount}`, 10, 70);
+    doc.text(`Date: ${formatDate(data.date)}`, 10, 80);
+    doc.text(`Status: ${data.status === "PD" ? "Pending" : data.status}`, 10, 90);
+  
+    // Investor & Project Info Section
+    doc.setFont("helvetica", "bold");
+    doc.text("Investor & Project Info", 10, 110);
+  
+    doc.setFont("helvetica", "normal");
+    doc.text(`Investor ID: ${data.investor}`, 10, 120);
+    doc.text(`Project ID: ${data.project}`, 10, 130);
+  
+    // Decorative Horizontal Line Between Sections
+    doc.setDrawColor(169, 169, 169); // Light gray line
+    doc.setLineWidth(0.5);
+    doc.line(10, 140, 200, 140);
+  
+    // Thank You Message with Styling
+    doc.setTextColor(46, 204, 113); // Soft green
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.text("Thank you for your payment!", 105, 180, { align: "center" });
+  
+    // Footer with Subtle Design
+    doc.setFillColor(230, 230, 230); // Light gray footer background
+    doc.rect(0, 270, 210, 10, "F");  // Footer banner
+    doc.setTextColor(100, 100, 100); // Gray footer text
+    doc.setFontSize(10);
+    doc.text("", 105, 275, { align: "center" });
+  
+    // Save the PDF
+    doc.save("stylish_payment_receipt.pdf");
+  };
+  
+  
   if (!allTransaction || allTransaction.length === 0) {
     return <p className="text-center py-5 ">Loading or No data available...</p>;
   }
-  if (!meTransaction || meTransaction.length === 0) {
-    return <p className="text-center py-5">Loading or No data available...</p>;
-  }
+  // if (!meTransaction || meTransaction.length === 0) {
+  //   return <p className="text-center py-5">Loading or No data available...</p>;
+  // }
   return (
     <>
       <div className="page-content bg-white">
@@ -605,7 +701,7 @@ const FundraiserDetail = () => {
             </div>
             <div className="row my-5 ">
               <Tabs
-                defaultActiveKey="profile"
+                defaultActiveKey="description"
                 id="justify-tab-example"
                 className="mb-3"
                 justify
@@ -714,15 +810,18 @@ const FundraiserDetail = () => {
                           checked={selectedOption === "all"}
                           onChange={handleOptionChange}
                         />
-                        <Form.Check
-                          type="radio"
-                          label="Me"
-                          name="radioGroup"
-                          value="me"
-                          id="radio-me"
-                          checked={selectedOption === "me"}
-                          onChange={handleOptionChange}
-                        />
+                        {token&&(
+                           <Form.Check
+                           type="radio"
+                           label="Me"
+                           name="radioGroup"
+                           value="me"
+                           id="radio-me"
+                           checked={selectedOption === "me"}
+                           onChange={handleOptionChange}
+                         />
+                        )}
+                       
                       </Col>
                     </Form.Group>
                     {selectedOption === "all" && (
@@ -747,15 +846,16 @@ const FundraiserDetail = () => {
                               <tr key={index}>
                                 <td>{transaction?.id}</td>
                                 <td>{formatDate(transaction?.date)}</td>
-                                <td>{transaction?.comment}</td>
+                                {/* <td>{transaction?.comment}</td> */}
                                 <td>
                                   <a
-                                    href={transaction?.invoice_file}
+                                   
+                                    onClick={()=>generatePDF(transaction?.invoice)}
                                     className="download-link"
                                     target="blank"
+                                    style={{cursor: "pointer"}}
                                   >
-                                    <i className="fa fa-download"></i> Download
-                                    File
+                                    <i className="fas fa-eye"></i> View
                                   </a>
                                   {/* <img
                                     style={{ width: "50px", height: "50px" }}
@@ -764,6 +864,7 @@ const FundraiserDetail = () => {
                                   /> */}
                                 </td>
                                 <td>{transaction?.amount}</td>
+                                <td>{transaction?.card_number}</td>
                               </tr>
                             ))}
                           </tbody>
@@ -793,18 +894,25 @@ const FundraiserDetail = () => {
                               <tr key={index}>
                                 <td>{transaction?.id}</td>
                                 <td>{formatDate(transaction?.date)}</td>
-                                <td>{transaction?.comment}</td>
+                                {/* <td>{transaction?.comment}</td> */}
                                 <td>
                                   <a
-                                    href={transaction?.invoice_file}
+                                   
+                                    onClick={()=>generatePDF(transaction?.invoice)}
                                     className="download-link"
                                     target="blank"
+                                    style={{cursor: "pointer"}}
                                   >
-                                    <i className="fa fa-download"></i> Download
-                                    File
+                                    <i className="fas fa-eye"></i> View
                                   </a>
+                                  {/* <img
+                                    style={{ width: "50px", height: "50px" }}
+                                    src={transaction?.invoice_file}
+                                    alt="Not found"
+                                  /> */}
                                 </td>
                                 <td>{transaction?.amount}</td>
+                                <td>{transaction?.card_number}</td>
                               </tr>
                             ))}
                           </tbody>
@@ -946,16 +1054,7 @@ const FundraiserDetail = () => {
                         <th>Id</th>
                         <th>Filename</th>
                         <th>Source</th>
-                        {/* Jadval sarlavhalarini dinamik ko'rsatish */}
-                        {/* {allTransaction.length > 0 && (
-                                <>
-                                  {Object.keys(meTransaction[0]).map(
-                                    (key, index) => (
-                                      <th key={index}>{key}</th>
-                                    )
-                                  )}
-                                </>
-                              )} */}
+                
                       </tr>
                     </thead>
                     <tbody>
@@ -1016,7 +1115,7 @@ const FundraiserDetail = () => {
         </Modal.Header>
         <Modal.Body>
           <Row>
-            {cards.map((card) => (
+            {cart&&cart.map((card) => (
               <Col md={6} key={card.id}>
                 <Card
                   className={selectedCard === card.id ? "border-success" : ""}
@@ -1026,9 +1125,9 @@ const FundraiserDetail = () => {
                   <Card.Body>
                     {/* <Card.Title>Card {card.id}</Card.Title> */}
                     <Card.Text>
-                      {card.number}
+                      {card?.card_number}
                       <br />
-                      Expiry: {card.expiry}
+                      Card Name: {card.vendor}
                     </Card.Text>
                     <Button variant="outline-primary">
                       {selectedCard === card.id ? "Selected" : "Select"}
@@ -1105,13 +1204,12 @@ const FundraiserDetail = () => {
         </Modal.Footer>
       </Modal>
       {/* {Verifikatsiya} */}
-      <Modal show={verify} onHide={()=>setVerify(false)}>
+      <Modal show={verify} onHide={() => setVerify(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Verify</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
-          
             <Form.Group className="mb-3">
               <Form.Label>Verify </Form.Label>
               <Form.Control
@@ -1119,14 +1217,14 @@ const FundraiserDetail = () => {
                 maxLength="10"
                 name="cardname"
                 value={value}
-                onChange={(e)=>setValue(e.target.value)}
+                onChange={(e) => setValue(e.target.value)}
                 placeholder="Card name"
               />
             </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={()=>setVerify(false)}>
+          <Button variant="secondary" onClick={() => setVerify(false)}>
             Cancel
           </Button>
           <Button variant="success" onClick={addCart}>

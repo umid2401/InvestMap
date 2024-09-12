@@ -28,7 +28,7 @@ import pic9 from "../../assets/images/main-slider/slider1/pic9.jpg";
 
 const dataBlog = [
 	{title1:"GIVE A HAND TO MAKE", title2:"Your Donation Can Change the World ",baner:slide1, img2: pic1, img3: pic2, img4:pic3 },
-	{title1:"HELPING HAND FOR CHILDREN", title2:"Give a Helping Hand for Children",baner:slide2, img2: pic4, img3: pic5, img4:pic6 },
+	{title1:"Empower Your Startup with Investhub", title2:"Start raising capital today",baner:slide2, img2: pic4, img3: pic5, img4:pic6 },
 	{title1:"CHILD THE OF EDUCATION", title2:"Give  a Child the of Education",baner:slide3, img2: pic7, img3: pic8, img4: pic9},
 	
 ];
@@ -78,15 +78,8 @@ const Mainslider2 = ({onShowDonate}) => {
 											<div className="top-content">
 												<h5 className="sub-title text-secondary">{d.title1}</h5>
 												<h1 className="title">{d.title2} </h1>
-												<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip</p>
-												<div className="d-flex align-items-center">
-													<Link to={"#"} className="btn btn-primary btnhover1" 
-														//onClick={()=>onShowDonate(true)}
-														onClick={() => {modalRef.current.handleModalOpen(); }}
-													>
-														<span>Donate</span>
-														<i className="flaticon-heart text-secondary ms-3"></i>
-													</Link>
+<p>Take the first step towards unlocking your startup’s potential. Submit your project, and our platform will match you with investors who share your vision. Together, we’ll make your entrepreneurial dreams a reality.</p>												<div className="d-flex align-items-center">
+													
 													<Link to={"/about-us"} className="btn btn-secondary btnhover2">Learn More <i className="flaticon-right-arrows ms-3"></i></Link>
 												</div>
 											</div>

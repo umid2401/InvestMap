@@ -24,7 +24,9 @@ const dataBlog = [
 	{subtitle:"Adam Jordon",image: pic2, image2:avat4, title:"He Created the Web. Now He’s Out to Remake",tage:"EDUCATION"},
 ];
 
-const NewsSlider = () => {
+const NewsSlider = ({blog}) => {
+    const api_url = process.env.REACT_APP_INVEST_MAP_API;
+
     return (
         <>             
             <Swiper className="blog-slider-full"
@@ -50,11 +52,11 @@ const NewsSlider = () => {
 				}}
 			>	
                
-				{dataBlog.map((d,i)=>(
+				{blog &&blog.map((d,i)=>(
 					<SwiperSlide key={i}>						
                         <div className="dz-card style-1 wow fadeInUp" data-wow-delay="0.2s">
                             <div className="dz-media">
-                                <Link to={"/blog-details"}><img src={d.image} alt="" /></Link>
+                                <Link to={"/blog-details"}><img src={`${api_url}${d.image}`} alt="" /></Link>
                                 <ul className="dz-badge-list">
                                     <li><Link to={"#"} className="dz-badge">{d.tage}</Link></li>
                                 </ul>
@@ -62,7 +64,8 @@ const NewsSlider = () => {
                             </div>
                             <div className="dz-info">
                                 <h5 className="dz-title"><Link to={"/blog-details"}>{d.title} </Link></h5>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et aliqua.</p>                                
+                                <p>{d.content}</p>  
+                                <p>Created: <span className='' style={{fontWeight:"bold"}}>{d.created_at.split('T')[0]}</span></p>                              
                                 <div className="author-wrappper">
                                     <div className="author-media">
                                         <img src={d.image2} alt="" /> 
@@ -72,7 +75,7 @@ const NewsSlider = () => {
                                             <h6 className="author-name">{d.subtitle}</h6>
                                         </div>
                                         <ul className="author-meta">
-                                            <li className="date">November 21th, 2022</li>
+                                            {/* <li className="date">{d.created_at.split('T')[0]}</li> */}
                                         </ul>
                                     </div>
                                 </div>

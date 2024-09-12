@@ -4,10 +4,10 @@ import {Link} from 'react-router-dom';
 import { SVGICON } from '../../constant/theme';
 
 const servicesBlog = [
-    {title:"Industry’s best fundraising success", icon:SVGICON.DoubleHeart },
-    {title:"Supported By 55,00,000+ Donors" , icon:SVGICON.Ring},
-    {title:"Easy-To-Manage Tools To Boost Results",icon:SVGICON.HeartWindow},
-    {title:"Akcel Get Expert Support 24/7",icon:SVGICON.HeartHelp},
+    {title:"Sign up on Investhub in just a few minutes with a simple and fast registration process. Enter your basic details, and your startup profile is ready to go.", icon:SVGICON.DoubleHeart },
+    {title:"Upload your project to our modernized platform. Our expert team will review and approve your startup to be showcased on the platform, making it visible to potential investors" , icon:SVGICON.Ring},
+    {title:"Thousands of individual investors and investment clubs can now see your project and contribute funds. Build strong connections with backers ready to support your vision.",icon:SVGICON.HeartWindow},
+    {title:"Once your project is funded, start receiving the necessary capital and move forward with your startup goals. You’ll have full financial support to help you achieve your milestones.",icon:SVGICON.HeartHelp},
     {title:"A Dedicated Smart-Dashboard",icon:SVGICON.DollerBox},
     {title:"Receive donations via all popular payment",icon:SVGICON.HeartHome},
     {title:"nternational Payment Support",icon:SVGICON.ThumbDoller1},

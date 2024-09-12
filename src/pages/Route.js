@@ -37,6 +37,7 @@ import Company from "./Company";
 import HeaderNew from "../layouts/HeaderNew";
 import CreateProject from "./CreateProject";
 import PrivateRoute from "./PrivateRoute";
+import ClubDetails from "./ClubDetails";
 
 
 function Index() {
@@ -69,6 +70,7 @@ function Index() {
             element={<TermsCondition />}
           />
           <Route path="/events" exact element={<Events />} />
+          <Route path="/club-detail" exact element={<ClubDetails/>}/>
           <Route path="/company" element={<PrivateRoute element={<Company />} />} />
 
           <Route

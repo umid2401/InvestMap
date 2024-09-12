@@ -29,9 +29,9 @@ const FundCard = () => {
         <>
             {cardBlog.map((item, index)=>(
                 <div className="col-xl-6 m-b30" key={index}>
-                    <div className="dz-card style-2 overlay-skew">
+                    <div className="dz-card style-2 ">
                         <div className="dz-media">
-                            <Link to={"fundraiser-detail"}><img src={item.image} alt="" /></Link>
+                            <Link to="/club-detail"><img src={item.image} alt="" /></Link>
                         </div>
                         <div className="dz-info">
                             <ul className="dz-category">

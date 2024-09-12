@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 //Images
 import shape3 from "../assets/images/side-images/shape3.png";
 import shape1 from "../assets/images/pattern/shape1.png";
@@ -6,6 +6,7 @@ import shape1 from "../assets/images/pattern/shape1.png";
 import shape5 from "../assets/images/pattern/shape5.png";
 import shape6 from "../assets/images/pattern/shape6.png";
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 const cardBlog = [
     {
       title: "Trusted Partner",
@@ -20,6 +21,35 @@ const cardBlog = [
     },
   ];
 export default function ContactComponent() {
+  const [card, setCard] = useState(null);
+  const api_url = process.env.REACT_APP_INVEST_MAP_API;
+  const getCard = async () => {
+    try {
+      const response = await axios.get(`${api_url}/api/contact-details/`);
+      const data = response?.data;
+      console.log(response);
+      setCard(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getCard();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const cardBlog = [
+    {
+      title: "Phone",
+      subtitle: card?.phone_number1,
+      icon: "flaticon-phone-call-1",
+    },
+    { title: "Mail", subtitle: card?.email1, icon: "flaticon-email" },
+    {
+      title: "Our Address",
+      subtitle: card?.office_address,
+      icon: "flaticon-pin",
+    },
+  ];
   return (
     <section className="content-inner-1 bg-light section-pattren1">
           <div className="container">

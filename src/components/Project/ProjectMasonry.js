@@ -178,7 +178,6 @@ const ProjectMasonry = ({ childData, notfound }) => {
     setPopular(cardData);
     setFiltered(cardData);
   }
-
   useEffect(() => {
     if (activeGenre === 0) {
       setFiltered(cardData);
@@ -207,6 +206,7 @@ const ProjectMasonry = ({ childData, notfound }) => {
   //   useEffect(() => {
   //     getData();
   //   }, []);
+  console.log(childData)
   return (
     <>
       <div className="row ">
@@ -321,9 +321,9 @@ const ProjectMasonry = ({ childData, notfound }) => {
                           <div className="progress">
                             <div
                               className="progress-bar progress-bar-secondary progress-bar-striped progress-bar-animated d-flex justify-content-center "
-                              style={{ width: item.progres }}
+                              style={{ width: item.progress_bar }}
                             >
-                              <span className="">50%</span>
+                              <span className="">{item.progress_bar}</span>
                             </div>
                           </div>
                           <ul className="progress-tag">
@@ -351,8 +351,8 @@ const ProjectMasonry = ({ childData, notfound }) => {
                                                         </ul> */}
                             </div>
                             <ul className="author-meta">
-                              <li className="campaign">Investorlar: 12ta</li>
-                              <li className="location">Tashkent</li>
+                              <li className="campaign">Investors: {item?.unique_investors_count}</li>
+                              <li className="location">{item?.region}</li>
                             </ul>
                           </div>
                         </div>
@@ -365,7 +365,7 @@ const ProjectMasonry = ({ childData, notfound }) => {
           </AnimatePresence>
         </ul>
       </div>
-      <div className="row">
+      {/* <div className="row">
         <div className="col-12 m-sm-t0 m-t30">
           <nav className="pagination-bx">
             <div className="page-item">
@@ -402,7 +402,7 @@ const ProjectMasonry = ({ childData, notfound }) => {
             </div>
           </nav>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };

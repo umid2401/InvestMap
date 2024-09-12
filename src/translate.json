@@ -1,0 +1,42 @@
+{
+    "en": {
+      "translation": {
+        "home": "Home",
+        "investing": "Investing",
+        "raising": "Raising",
+        "academy": "Academy",
+        "club": "Clubs",
+        "resource": "Resources",
+        "signup": "Register",
+        "signin": "Login",
+        "myaccount": "My Account"
+      }
+    },
+    "uz": {
+      "translation": {
+        "home": "Bosh sahifa",
+        "investing": "Investitsiya",
+        "raising": "Jamg'arma",
+        "academy": "Akademiya",
+        "club": "Klublar",
+        "resource": "Resurslar",
+        "signup": "Ro'yxatdan o'tish",
+        "signin": "Kirish",
+        "myaccount": "Mening hisobim"
+      }
+    },
+    "ru": {
+      "translation": {
+        "home": "Главная",
+        "investing": "Инвестирование",
+        "raising": "Сбор средств",
+        "academy": "Академия",
+        "club": "Клубы",
+        "resource": "Ресурсы",
+        "signup": "Регистрация",
+        "signin": "Войти",
+        "myaccount": "Мой аккаунт"
+      }
+    }
+  }
+  

@@ -77,6 +77,10 @@ export const MenuListArray2 = [
          title:"Academy",
         to:"/academy"
     },
+    {
+        title:"Club",
+       to:"/club"
+   },
  {
         title:"Resources",
         classChange:"sub-menu-down",

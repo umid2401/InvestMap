@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
 //images
 import signature from "./../assets/images/about/signature.png";
 import bg4 from "./../assets/images/background/bg4.jpg";
@@ -9,9 +8,7 @@ import NewsSlider from "../components/Home/NewsSlider";
 import OurMission from "../components/OurMission";
 import { IMAGES } from "../constant/theme";
 import axios from "axios";
-
 const iconBlog = [{ title: "Trusted Partner" }, { title: "Responsibility" }];
-
 const wrapperBlog = [
   { icon: "flaticon-vr-glasses", title: "Quo Maxime Qui Impedit Odio Soluta" },
   {
@@ -34,7 +31,7 @@ const AboutUs = () => {
       });
       const data = response?.data;
       setAbout(data);
-      console.log(response?.data);
+      console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -49,7 +46,6 @@ const AboutUs = () => {
   return (
     <>
       <div className="page-content bg-white">
-     
         <section className="content-inner section-wrapper5">
           <div className="container">
             <div className="row align-items-center">

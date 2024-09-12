@@ -1,22 +1,18 @@
+/* eslint-disable jsx-a11y/anchor-has-content */
 import React from 'react';
 import {Link} from 'react-router-dom';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
-
 // Import Swiper styles
 import "swiper/css";
-
 //Images
 import team1 from './../../assets/images/team/team1.jpg';
 import team2 from './../../assets/images/team/team2.jpg';
 import team3 from './../../assets/images/team/team3.jpg';
 import team4 from './../../assets/images/team/team4.jpg';
-
 // import Swiper core and required modules
 import { Autoplay } from "swiper";
-
 //SwiperCore.use([EffectCoverflow,Pagination]);
-
 const dataBlog = [
 	{image: team1, title:'Kaylynn Donin', subtitle:'Managing Director'},
 	{image: team2, title:'Jakob Bothman', subtitle:'District Accounts Analyst'},
